@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">iOrder</string>
+
+    <!-- Log In/Sign Up strings -->
+    <string name="email_prompt">Email</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="log_in_button_text">LOG IN</string>
+    <string name="password_prompt">Password</string>
+    <string name="prompt_confirm_password">Confirm password</string>
+    <string name="prompt_eid">Employee ID</string>
+    <string name="prompt_name">Name</string>
+    <string name="prompt_surname">Surname</string>
+    <string name="signin_toolbar_text">Log In/Sign Up</string>
+    <string name="sign_up">Sign up</string>
+    <string name="sign_up_link_text">No account? Sign up here</string>
+
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
