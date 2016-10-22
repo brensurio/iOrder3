@@ -1,12 +1,12 @@
 package com.app.brensurio.iorder;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,14 +21,12 @@ import android.widget.TextView;
 
 public class MainFragment extends Fragment {
 
+    private MyFragmentCallback callback;
     private TabLayout tabLayout;
-
-    private Button signInButton;
     private EditText emailEditText;
     private EditText passwordEditText;
     private TextInputLayout emailTextInputLayout;
     private TextInputLayout passwordTextInputLayout;
-    private TextView signUpLinkTextView;
 
     public MainFragment() {
         // Required empty public constructor
@@ -42,6 +40,18 @@ public class MainFragment extends Fragment {
     }
 
     /**
+     * Called when a fragment is first attached to its context.
+     * {@link #onCreate(Bundle)} will be called after this.
+     *
+     * @param context
+     */
+    @Override
+    public void onAttach(Context context) {
+        callback = (MyFragmentCallback) context;
+        super.onAttach(context);
+    }
+
+    /**
      * Called when the Fragment is visible to the user.  This is generally
      * tied to {@link Activity#onStart() Activity.onStart} of the containing
      * Activity's lifecycle.
@@ -52,7 +62,7 @@ public class MainFragment extends Fragment {
 
         View view = getView();
         if (view != null) {
-            signInButton = (Button) view.findViewById(R.id.sign_in_button);
+            Button signInButton = (Button) view.findViewById(R.id.sign_in_button);
             signInButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -100,7 +110,7 @@ public class MainFragment extends Fragment {
                 }
             });
 
-            signUpLinkTextView = (TextView) view.findViewById(R.id.sign_up_link_text_view);
+            TextView signUpLinkTextView = (TextView) view.findViewById(R.id.sign_up_link_text_view);
             signUpLinkTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -174,11 +184,20 @@ public class MainFragment extends Fragment {
             // form field with an error.
             focusView.requestFocus();
         } else {
-
+            callback.signIn(emailEditText.getText().toString(),
+                    passwordEditText.getText().toString());
         }
     }
 
     private void onSignUp() {
         tabLayout.getTabAt(1).select();
+    }
+
+    public  String getEmail() {
+        return emailEditText.getText().toString();
+    }
+
+    public String getPassword() {
+        return passwordEditText.getText().toString();
     }
 }
