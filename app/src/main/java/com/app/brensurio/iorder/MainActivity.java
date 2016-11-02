@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements MyFragmentCallbac
 
                     Query eidQuery = mDatabase.child("users").orderByChild("email")
                             .equalTo(user.getEmail());
+
                     eidQuery.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
