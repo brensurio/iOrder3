@@ -31,6 +31,10 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity implements MyFragmentCallback {
 
     private static final String TAG = "";
+    private static final String STORE_NAME = "storeName";
+    private static final String STORE_1 = "store1";
+    private static final String STORE_2 = "store2";
+    private static final String STORE_3 = "store3";
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -78,7 +82,17 @@ public class MainActivity extends AppCompatActivity implements MyFragmentCallbac
                                     if (eid.substring(0, 1).equalsIgnoreCase("s")) {
                                         Intent intent = new Intent(MainActivity.this,
                                                 SellerMainActivity.class);
+                                        if (eid.substring(1, 2).equalsIgnoreCase("a"))
+                                            intent.putExtra(MainActivity.STORE_NAME,
+                                                    MainActivity.STORE_1);
+                                        else if (eid.substring(1, 2).equalsIgnoreCase("b"))
+                                            intent.putExtra(MainActivity.STORE_NAME,
+                                                    MainActivity.STORE_2);
+                                        else if (eid.substring(1, 2).equalsIgnoreCase("c"))
+                                            intent.putExtra(MainActivity.STORE_NAME,
+                                                    MainActivity.STORE_3);
                                         startActivity(intent);
+                                        finish();
                                     }
                                 }
                             }

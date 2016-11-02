@@ -24,4 +24,13 @@
 
     <string name="action_settings">Settings</string>
 
+    <!-- Upload food strings -->
+    <string name="price_prompt">Price</string>
+    <string name="desc_prompt">Description</string>
+    <string name="image_prompt">Image</string>
+    <string name="upload_food_text">Upload</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
