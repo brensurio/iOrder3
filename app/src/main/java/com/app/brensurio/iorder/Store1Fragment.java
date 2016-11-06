@@ -64,6 +64,8 @@ public class Store1Fragment extends Fragment {
                                     new LinearLayoutManager(getActivity());
                             foodRecycler.setLayoutManager(linearLayoutManager);
                             foodRecycler.setAdapter(foodListAdapter);
+
+                            foodListAdapter.setListener();
                         }
                     }
                 }

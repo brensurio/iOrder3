@@ -22,12 +22,15 @@ class CustomerFoodListAdapter extends RecyclerView.Adapter<CustomerFoodListAdapt
     private List<Food> food;
     private String user;
     private int storeNum;
+    private Listener listener;
+
+    public interface Listener {
+        void onClick(int position);
+    }
 
     // Provide reference to the views used in the recycler view
     public static class ViewHolder extends RecyclerView.ViewHolder {
-
         private CardView cardView;
-
         public ViewHolder(CardView v) {
             super(v);
             cardView = v;
@@ -50,31 +53,28 @@ class CustomerFoodListAdapter extends RecyclerView.Adapter<CustomerFoodListAdapt
     }
 
     @Override
-    public void onBindViewHolder(CustomerFoodListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(CustomerFoodListAdapter.ViewHolder holder, final int position) {
 
         CardView cardView = holder.cardView;
-
         Button button = (Button) cardView.findViewById(R.id.delete_button);
         cardView.removeView(button);
-
         TextView foodNameTextView = (TextView) cardView.findViewById(R.id.food_name_text_view);
         foodNameTextView.setText(food.get(position).getName());
-
         TextView foodPriceTextView = (TextView) cardView.findViewById(R.id.food_price_text_view);
         foodPriceTextView.setText(food.get(position).getPrice());
-
         TextView foodDescTextView = (TextView) cardView.findViewById(R.id.food_desc_text_view);
         foodDescTextView.setText(food.get(position).getDescription());
-
         ImageView foodImageView = (ImageView) cardView.findViewById(R.id.food_image_view);
         Picasso.with(foodImageView.getContext()).load(food.get(position).getImageLink())
                 .into(foodImageView);
-
         Button addToCartButton = (Button) cardView.findViewById(R.id.update_button);
+
         addToCartButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                
+                if (listener != null) {
+                    listener.onClick(position);
+                }
             }
         });
     }
@@ -86,5 +86,9 @@ class CustomerFoodListAdapter extends RecyclerView.Adapter<CustomerFoodListAdapt
 
     public Food getFood(int position) {
         return food.get(position);
+    }
+
+    public void setListener(Listener listener) {
+        this.listener = listener;
     }
 }
