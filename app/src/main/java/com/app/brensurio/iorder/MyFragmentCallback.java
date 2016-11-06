@@ -6,6 +6,6 @@ package com.app.brensurio.iorder;
 
 interface MyFragmentCallback {
 
-    void signUp(String email, String password);
+    void signUp(String email, String password, String displayName);
     void signIn(String email, String password);
 }

@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.app.brensurio.iorder">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -35,6 +36,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".SellerMainActivity" />
         </activity>
+        <activity
+            android:name=".CustomerMainActivity"
+            android:label="@string/title_activity_customer_main"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

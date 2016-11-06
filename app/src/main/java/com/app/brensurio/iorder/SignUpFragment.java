@@ -237,7 +237,9 @@ public class SignUpFragment extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             callback.signUp(emailEditText.getText().toString(),
-                                    passwordEditText.getText().toString());
+                                    passwordEditText.getText().toString(),
+                                    nameEditText.getText().toString().concat(" " +
+                                            surnameEditText.getText().toString()));
                             User user = new User(nameEditText.getText().toString(),
                                     surnameEditText.getText().toString(),
                                     eidEditText.getText().toString(),
