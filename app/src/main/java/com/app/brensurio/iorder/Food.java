@@ -11,16 +11,18 @@ public class Food {
     private String price;
     private String description;
     private String imageLink;
+    private String store;
 
     Food() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    Food(String name, String price, String description, String imageLink) {
+    Food(String name, String price, String description, String imageLink, String store) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.imageLink = imageLink;
+        this.store = store;
     }
 
     public String getDescription() {
@@ -37,5 +39,9 @@ public class Food {
 
     public String getPrice() {
         return price;
+    }
+
+    private String getStore() {
+        return store;
     }
 }

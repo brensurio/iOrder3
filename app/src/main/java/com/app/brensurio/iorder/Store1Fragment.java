@@ -1,7 +1,6 @@
 package com.app.brensurio.iorder;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,7 +30,10 @@ import java.util.List;
 public class Store1Fragment extends Fragment {
 
     private DatabaseReference mDatabase;
+    private String name;
+    private String userName;
     private List<Food> foodList;
+    private List<Food> orderList;
 
     public Store1Fragment() {
         // Required empty public constructor
@@ -44,8 +46,14 @@ public class Store1Fragment extends Fragment {
                 inflater.inflate(R.layout.fragment_seller_food_list, container, false);
 
         foodList = new ArrayList<>();
+        orderList = new ArrayList<>();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         Query query = mDatabase.child("store1foodlist");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // Name, email address, and profile photo Url
+             userName = user.getDisplayName();
+        }
 
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -53,21 +61,33 @@ public class Store1Fragment extends Fragment {
                 for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
                     Food food = singleSnapshot.getValue(Food.class);
                     foodList.add(food);
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     if (user != null) {
                         for (UserInfo profile : user.getProviderData()) {
-
-                            String name = profile.getDisplayName();
-                            CustomerFoodListAdapter foodListAdapter =
-                                    new CustomerFoodListAdapter(foodList, 1, name);
-                            LinearLayoutManager linearLayoutManager =
-                                    new LinearLayoutManager(getActivity());
-                            foodRecycler.setLayoutManager(linearLayoutManager);
-                            foodRecycler.setAdapter(foodListAdapter);
-
-                            foodListAdapter.setListener();
+                            name = profile.getDisplayName();
                         }
                     }
+                    CustomerFoodListAdapter foodListAdapter =
+                            new CustomerFoodListAdapter(foodList, 1, name);
+                    LinearLayoutManager linearLayoutManager =
+                            new LinearLayoutManager(getActivity());
+                    foodRecycler.setLayoutManager(linearLayoutManager);
+                    foodRecycler.setAdapter(foodListAdapter);
+
+                    foodListAdapter.setListener(new CustomerFoodListAdapter.Listener() {
+                        @Override
+                        public void onClick(int position) {
+                            Food food = foodList.get(position);
+                            if (!orderList.contains(food)) {
+                                orderList.add(food);
+                                Toast.makeText(getActivity(), "Added to cart",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                                Toast.makeText(getActivity(), "Item is in cart already",
+                                        Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             }
 
@@ -78,5 +98,9 @@ public class Store1Fragment extends Fragment {
         });
 
         return foodRecycler;
+    }
+
+    public List getOrderList() {
+        return this.orderList;
     }
 }

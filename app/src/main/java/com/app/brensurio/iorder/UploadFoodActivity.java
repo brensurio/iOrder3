@@ -114,7 +114,8 @@ public class UploadFoodActivity extends AppCompatActivity {
                 Food food = new Food(foodNameEditText.getText().toString(),
                         foodPriceEditText.getText().toString(),
                         foodDescEditText.getText().toString(),
-                        downloadUrl.toString());
+                        downloadUrl.toString(),
+                        storeName);
                 mDatabase.child(String.valueOf(storeDBName)).push().setValue(food);
             }
         });
