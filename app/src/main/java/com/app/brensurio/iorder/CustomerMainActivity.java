@@ -25,18 +25,23 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
+import java.util.ArrayList;
+
 public class CustomerMainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        Store1Fragment.Store1FragmentListener {
 
     private static final String TAG = "";
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private ArrayList<Food> orderList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_main);
 
+        orderList = new ArrayList<>();
         mAuth = FirebaseAuth.getInstance();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -52,6 +57,13 @@ public class CustomerMainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 // TODO: Show cart of customer with items ordered
+                Store1Fragment store1Fragment = (Store1Fragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.fragment_store1);
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                Intent intent = new Intent(CustomerMainActivity.this, CartActivity.class);
+                intent.putExtra("name", user.getDisplayName());
+                intent.putExtra("foodList", orderList);
+                startActivity(intent);
             }
         });
 
@@ -148,6 +160,16 @@ public class CustomerMainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public ArrayList<Food> getOrderList() {
+        return this.orderList;
+    }
+
+    @Override
+    public void addToOrderList(Food food) {
+        this.orderList.add(food);
     }
 
     /**
