@@ -73,8 +73,10 @@ public class CartActivity extends AppCompatActivity {
             String status = "processing";
 
             store1Order = new Order(name, refNo, items, String.valueOf(amount), location, status);
+            DatabaseReference ref = mDatabase.child("store1orders");
+            ref.push().setValue(store1Order);
+            refNo = ref.getKey();
 
-            mDatabase.child("store1orders").push().setValue(store1Order);
         }
         if (!store2OrderList.isEmpty()) {
             String name = this.name;

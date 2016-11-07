@@ -23,11 +23,13 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 public class UploadFoodActivity extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final String STORE_NAME = "storeName";
+    private static final int PICK_IMAGE_REQUEST = 0;
     private DatabaseReference mDatabase;
     private Bitmap imageBitmap;
     private EditText foodNameEditText;
@@ -65,6 +67,14 @@ public class UploadFoodActivity extends AppCompatActivity {
             }
         });
 
+        Button galleryButton = (Button) findViewById(R.id.gallery_button);
+        galleryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                galleryTakePictureIntent();
+            }
+        });
+
         Button uploadButton = (Button) findViewById(R.id.upload_button);
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,6 +92,15 @@ public class UploadFoodActivity extends AppCompatActivity {
             Bundle extras = data.getExtras();
             imageBitmap = (Bitmap) extras.get("data");
             foodImageView.setImageBitmap(imageBitmap);
+        } else if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK) {
+            Uri selectedImage = data.getData();
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            foodImageView.setImageBitmap(bitmap);
         }
     }
 
@@ -90,6 +109,13 @@ public class UploadFoodActivity extends AppCompatActivity {
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
+    }
+
+    private void galleryTakePictureIntent() {
+        Intent pickPhotoIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        if (pickPhotoIntent.resolveActivity(getPackageManager()) != null)
+            startActivityForResult(pickPhotoIntent, PICK_IMAGE_REQUEST);
+
     }
 
     private void upload() {
