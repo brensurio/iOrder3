@@ -1,6 +1,7 @@
 package com.app.brensurio.iorder;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,10 +34,28 @@ public class Store1Fragment extends Fragment {
     private String name;
     private String userName;
     private List<Food> foodList;
-    private List<Food> orderList;
+    private ArrayList<Food> orderList;
+    private Store1FragmentListener store1FragmentCallback;
+
+    interface Store1FragmentListener {
+        ArrayList<Food> getOrderList();
+        void addToOrderList(Food food);
+    }
 
     public Store1Fragment() {
         // Required empty public constructor
+    }
+
+    /**
+     * Called when a fragment is first attached to its context.
+     * {@link #onCreate(Bundle)} will be called after this.
+     *
+     * @param context
+     */
+    @Override
+    public void onAttach(Context context) {
+        store1FragmentCallback = (Store1FragmentListener) context;
+        super.onAttach(context);
     }
 
     @Override
@@ -78,29 +97,26 @@ public class Store1Fragment extends Fragment {
                         @Override
                         public void onClick(int position) {
                             Food food = foodList.get(position);
-                            if (!orderList.contains(food)) {
-                                orderList.add(food);
+                            if (store1FragmentCallback.getOrderList().contains(food)) {
+                                Toast.makeText(getActivity(), "Item is in cart already",
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                store1FragmentCallback.addToOrderList(food);
                                 Toast.makeText(getActivity(), "Added to cart",
                                         Toast.LENGTH_SHORT).show();
                             }
-                            else
-                                Toast.makeText(getActivity(), "Item is in cart already",
-                                        Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
             }
-
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) { }
         });
 
         return foodRecycler;
     }
 
-    public List getOrderList() {
+    public ArrayList<Food> getOrderList() {
         return this.orderList;
     }
 }

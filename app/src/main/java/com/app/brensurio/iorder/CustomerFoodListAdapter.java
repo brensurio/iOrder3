@@ -84,10 +84,6 @@ class CustomerFoodListAdapter extends RecyclerView.Adapter<CustomerFoodListAdapt
         return food.size();
     }
 
-    public Food getFood(int position) {
-        return food.get(position);
-    }
-
     public void setListener(Listener listener) {
         this.listener = listener;
     }
