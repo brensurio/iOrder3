@@ -76,18 +76,6 @@
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:textColor="@color/colorAccent" />
 
-            <Button
-                android:text="Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/delete_button"
-                android:layout_weight="1"
-                android:layout_marginLeft="8dp"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@+id/update_button"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:textColor="@color/colorAccent" />
-
         </RelativeLayout>
 
     </RelativeLayout>

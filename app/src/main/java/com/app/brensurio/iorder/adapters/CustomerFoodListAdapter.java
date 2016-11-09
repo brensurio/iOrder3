@@ -1,4 +1,4 @@
-package com.app.brensurio.iorder;
+package com.app.brensurio.iorder.adapters;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.app.brensurio.iorder.models.Food;
+import com.app.brensurio.iorder.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -17,7 +19,7 @@ import java.util.List;
  * Created by Mariz L. Maas on 11/3/2016.
  */
 
-class CustomerFoodListAdapter extends RecyclerView.Adapter<CustomerFoodListAdapter.ViewHolder> {
+public class CustomerFoodListAdapter extends RecyclerView.Adapter<CustomerFoodListAdapter.ViewHolder> {
 
     private List<Food> food;
     private String user;
@@ -56,8 +58,7 @@ class CustomerFoodListAdapter extends RecyclerView.Adapter<CustomerFoodListAdapt
     public void onBindViewHolder(CustomerFoodListAdapter.ViewHolder holder, final int position) {
 
         CardView cardView = holder.cardView;
-        Button button = (Button) cardView.findViewById(R.id.delete_button);
-        cardView.removeView(button);
+
         TextView foodNameTextView = (TextView) cardView.findViewById(R.id.food_name_text_view);
         foodNameTextView.setText(food.get(position).getName());
         TextView foodPriceTextView = (TextView) cardView.findViewById(R.id.food_price_text_view);

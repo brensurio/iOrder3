@@ -4,7 +4,7 @@
     android:id="@+id/activity_cart"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.app.brensurio.iorder.CartActivity"
+    tools:context="com.app.brensurio.iorder.activities.CartActivity"
     android:layout_alignParentBottom="false"
     android:padding="16dp">
 

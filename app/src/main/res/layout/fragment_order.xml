@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.app.brensurio.iorder.fragments.Store3Fragment">
+    tools:context="com.app.brensurio.iorder.fragments.OrderFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

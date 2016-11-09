@@ -1,5 +1,4 @@
-package com.app.brensurio.iorder;
-
+package com.app.brensurio.iorder.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.app.brensurio.iorder.CustomerFoodListAdapter;
+import com.app.brensurio.iorder.models.Food;
+import com.app.brensurio.iorder.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
@@ -22,17 +24,12 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
-public class Store2Fragment extends Fragment {
-
+public class Store3Fragment extends Fragment {
 
     private DatabaseReference mDatabase;
     private List<Food> foodList;
 
-    public Store2Fragment() {
+    public Store3Fragment() {
         // Required empty public constructor
     }
 
@@ -44,7 +41,7 @@ public class Store2Fragment extends Fragment {
 
         foodList = new ArrayList<>();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        Query query = mDatabase.child("store2foodlist");
+        Query query = mDatabase.child("store3foodlist");
 
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -58,7 +55,7 @@ public class Store2Fragment extends Fragment {
 
                             String name = profile.getDisplayName();
                             CustomerFoodListAdapter foodListAdapter =
-                                    new CustomerFoodListAdapter(foodList, 2, name);
+                                    new CustomerFoodListAdapter(foodList, 3, name);
                             LinearLayoutManager linearLayoutManager =
                                     new LinearLayoutManager(getActivity());
                             foodRecycler.setLayoutManager(linearLayoutManager);

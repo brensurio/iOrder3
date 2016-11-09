@@ -1,4 +1,4 @@
-package com.app.brensurio.iorder;
+package com.app.brensurio.iorder.activities;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -14,12 +14,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.app.brensurio.iorder.fragments.MainFragment;
+import com.app.brensurio.iorder.MyFragmentCallback;
+import com.app.brensurio.iorder.R;
+import com.app.brensurio.iorder.fragments.SignUpFragment;
+import com.app.brensurio.iorder.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

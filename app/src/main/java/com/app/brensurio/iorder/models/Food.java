@@ -1,4 +1,4 @@
-package com.app.brensurio.iorder;
+package com.app.brensurio.iorder.models;
 
 import java.io.Serializable;
 import java.util.Objects;

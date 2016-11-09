@@ -1,9 +1,8 @@
-package com.app.brensurio.iorder;
+package com.app.brensurio.iorder.fragments;
 
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TextInputLayout;
@@ -16,8 +15,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.app.brensurio.iorder.MyFragmentCallback;
+import com.app.brensurio.iorder.R;
+import com.app.brensurio.iorder.models.User;
+import com.app.brensurio.iorder.activities.MainActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

@@ -1,4 +1,4 @@
-package com.app.brensurio.iorder;
+package com.app.brensurio.iorder.fragments;
 
 
 import android.content.Context;
@@ -11,6 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.app.brensurio.iorder.adapters.CustomerFoodListAdapter;
+import com.app.brensurio.iorder.models.Food;
+import com.app.brensurio.iorder.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;

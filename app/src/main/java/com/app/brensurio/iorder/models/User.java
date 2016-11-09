@@ -1,20 +1,20 @@
-package com.app.brensurio.iorder;
+package com.app.brensurio.iorder.models;
 
 /**
  * Created by Mariz L. Maas on 10/17/2016.
  */
 
-class User {
+public class User {
     private String firstName;
     private String lastName;
     private String eid;
     private String email;
 
-    User() {
+    public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    User(String firstName, String lastName, String eid, String email) {
+    public User(String firstName, String lastName, String eid, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.eid = eid;

@@ -1,7 +1,8 @@
-package com.app.brensurio.iorder;
+package com.app.brensurio.iorder.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -12,8 +13,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
+import com.app.brensurio.iorder.models.Food;
+import com.app.brensurio.iorder.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
@@ -23,7 +25,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 public class UploadFoodActivity extends AppCompatActivity {
 
@@ -88,19 +91,22 @@ public class UploadFoodActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             imageBitmap = (Bitmap) extras.get("data");
             foodImageView.setImageBitmap(imageBitmap);
         } else if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK) {
             Uri selectedImage = data.getData();
-            Bitmap bitmap = null;
+            InputStream image_stream = null;
             try {
-                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
-            } catch (IOException e) {
+                image_stream = getContentResolver().openInputStream(selectedImage);
+            } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-            foodImageView.setImageBitmap(bitmap);
+            imageBitmap = BitmapFactory.decodeStream(image_stream );
+
+            foodImageView.setImageBitmap(imageBitmap);
         }
     }
 

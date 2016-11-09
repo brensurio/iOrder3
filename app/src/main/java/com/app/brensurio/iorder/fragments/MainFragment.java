@@ -1,4 +1,4 @@
-package com.app.brensurio.iorder;
+package com.app.brensurio.iorder.fragments;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,6 +14,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.app.brensurio.iorder.MyFragmentCallback;
+import com.app.brensurio.iorder.R;
+import com.app.brensurio.iorder.activities.MainActivity;
 
 /**
  * Created by Mariz L. Maas on 10/18/2016.

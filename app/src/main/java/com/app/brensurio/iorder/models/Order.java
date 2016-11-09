@@ -1,8 +1,6 @@
-package com.app.brensurio.iorder;
+package com.app.brensurio.iorder.models;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
