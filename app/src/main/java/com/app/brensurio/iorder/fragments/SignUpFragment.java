@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.app.brensurio.iorder.MyFragmentCallback;
+import com.app.brensurio.iorder.interfaces.MyFragmentCallback;
 import com.app.brensurio.iorder.R;
 import com.app.brensurio.iorder.models.User;
 import com.app.brensurio.iorder.activities.MainActivity;
@@ -31,7 +31,6 @@ import com.google.firebase.database.ValueEventListener;
  */
 public class SignUpFragment extends Fragment {
 
-    private static final String TAG = "";
     // Firebase instance variables
     private DatabaseReference mDatabase;
     private MyFragmentCallback callback;
@@ -238,9 +237,7 @@ public class SignUpFragment extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             callback.signUp(emailEditText.getText().toString(),
-                                    passwordEditText.getText().toString(),
-                                    nameEditText.getText().toString().concat(" " +
-                                            surnameEditText.getText().toString()));
+                                    passwordEditText.getText().toString());
                             User user = new User(nameEditText.getText().toString(),
                                     surnameEditText.getText().toString(),
                                     eidEditText.getText().toString(),

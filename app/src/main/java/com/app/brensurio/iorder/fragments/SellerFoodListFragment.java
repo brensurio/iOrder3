@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.brensurio.iorder.models.Food;
-import com.app.brensurio.iorder.FoodListAdapter;
+import com.app.brensurio.iorder.adapters.FoodListAdapter;
 import com.app.brensurio.iorder.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

@@ -1,30 +1,27 @@
 package com.app.brensurio.iorder.activities;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.app.brensurio.iorder.fragments.MainFragment;
-import com.app.brensurio.iorder.MyFragmentCallback;
+import com.app.brensurio.iorder.interfaces.MyFragmentCallback;
 import com.app.brensurio.iorder.R;
+import com.app.brensurio.iorder.fragments.MainFragment;
 import com.app.brensurio.iorder.fragments.SignUpFragment;
-import com.app.brensurio.iorder.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,31 +38,16 @@ public class MainActivity extends AppCompatActivity implements MyFragmentCallbac
     private static final String STORE_1 = "store1";
     private static final String STORE_2 = "store2";
     private static final String STORE_3 = "store3";
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
     private TabLayout tabLayout;
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
-    private ViewPager mViewPager;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final MainFragment mainFragment = (MainFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.activity_main);
+
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -73,12 +55,9 @@ public class MainActivity extends AppCompatActivity implements MyFragmentCallbac
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-
+                    // If user is signed in
                     Query eidQuery = mDatabase.child("users").orderByChild("email")
                             .equalTo(user.getEmail());
-
                     eidQuery.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -86,7 +65,9 @@ public class MainActivity extends AppCompatActivity implements MyFragmentCallbac
                                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                                     Map m = (Map) postSnapshot.getValue();
                                     String eid = m.get("eid").toString();
-
+                                    String email = m.get("email").toString();
+                                    String name = m.get("firstName").toString() + " "
+                                            + m.get("lastName").toString();
                                     if (eid.substring(0, 1).equalsIgnoreCase("s")) {
                                         Intent intent = new Intent(MainActivity.this,
                                                 SellerMainActivity.class);
@@ -104,6 +85,8 @@ public class MainActivity extends AppCompatActivity implements MyFragmentCallbac
                                     } else if (eid.substring(0, 1).equalsIgnoreCase("f")) {
                                         Intent intent = new Intent(MainActivity.this,
                                                 CustomerMainActivity.class);
+                                        intent.putExtra("NAME", name);
+                                        intent.putExtra("EMAIL", email);
                                         startActivity(intent);
                                     }
                                 }
@@ -121,11 +104,12 @@ public class MainActivity extends AppCompatActivity implements MyFragmentCallbac
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the two
+        // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        SectionsPagerAdapter mSectionsPagerAdapter =
+                new SectionsPagerAdapter(getSupportFragmentManager());
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
@@ -146,31 +130,16 @@ public class MainActivity extends AppCompatActivity implements MyFragmentCallbac
     }
 
     @Override
-    public void signUp(String email, String password, final String displayName) {
+    public void signUp(String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
-
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                .setDisplayName(displayName)
-                                .build();
-                        user.updateProfile(profileUpdates)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Log.d(TAG, "User profile updated.");
-                                        }
-                                    }
-                                });
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-
+                            // TODO: Create action if no user is signed in
                         }
                     }
                 });
@@ -187,7 +156,6 @@ public class MainActivity extends AppCompatActivity implements MyFragmentCallbac
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-                            Log.w(TAG, "signInWithEmail:failed", task.getException());
                             Toast.makeText(MainActivity.this, "Failed!",
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -201,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements MyFragmentCallbac
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 

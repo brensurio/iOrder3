@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.app.brensurio.iorder.models.Food;
 import com.app.brensurio.iorder.R;
@@ -33,7 +34,6 @@ public class CustomerMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         Store1Fragment.Store1FragmentListener {
 
-    private static final String TAG = "";
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private ArrayList<Food> orderList;
@@ -43,8 +43,8 @@ public class CustomerMainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_main);
 
-        orderList = new ArrayList<>();
         mAuth = FirebaseAuth.getInstance();
+        orderList = new ArrayList<>();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -58,12 +58,8 @@ public class CustomerMainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: Show cart of customer with items ordered
-                Store1Fragment store1Fragment = (Store1Fragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.fragment_store1);
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 Intent intent = new Intent(CustomerMainActivity.this, CartActivity.class);
-                intent.putExtra("name", user.getDisplayName());
+                intent.putExtra("name", getIntent().getStringExtra("NAME"));
                 intent.putExtra("foodList", orderList);
                 startActivity(intent);
             }
@@ -77,6 +73,11 @@ public class CustomerMainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View headerLayout = navigationView.getHeaderView(0);
+        TextView nameTextView = (TextView) headerLayout.findViewById(R.id.customer_name_text_view);
+        nameTextView.setText(getIntent().getStringExtra("NAME"));
+        TextView emailTextView = (TextView) headerLayout.findViewById(R.id.customer_email_text_view);
+        emailTextView.setText(getIntent().getStringExtra("EMAIL"));
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -141,7 +142,7 @@ public class CustomerMainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -155,7 +156,7 @@ public class CustomerMainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_log_out) {
             FirebaseAuth.getInstance().signOut();
         }
 

@@ -3,33 +3,27 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Home" />
+            android:id="@+id/nav_shop_now"
+            android:icon="@drawable/ic_shop_black_24dp"
+            android:title= "@string/shop_now"/>
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Cart" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:id="@+id/nav_cart"
+            android:icon="@drawable/ic_shopping_cart_black_24dp"
+            android:title="@string/cart" />
+        <item android:title="@string/orders"
+            android:id="@+id/nav_orders"
+            android:icon="@drawable/ic_view_list_black_24dp" />
+        <item android:title="@string/history_orders"
+            android:id="@+id/nav_history"
+            android:icon="@drawable/ic_timeline_black_24dp" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="@string/account">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Logout" />
+                android:id="@+id/nav_log_out"
+                android:icon="@drawable/ic_exit_to_app_black_24dp"
+                android:title="@string/log_out" />
         </menu>
     </item>
 

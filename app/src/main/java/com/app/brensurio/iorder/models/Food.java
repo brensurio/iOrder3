@@ -18,7 +18,7 @@ public class Food implements Serializable{
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    Food(String name, String price, String description, String imageLink, String store) {
+    public Food(String name, String price, String description, String imageLink, String store) {
         this.name = name;
         this.price = price;
         this.description = description;
@@ -68,13 +68,27 @@ public class Food implements Serializable{
 
     @Override
     public boolean equals(Object o) {
-        if ((o instanceof Order) && (Objects.equals(((Food) o).getName(),
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Food food = (Food) o;
+
+        if (!getName().equals(food.getName())) return false;
+        return getPrice().equals(food.getPrice());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getName().hashCode();
+        result = 31 * result + getPrice().hashCode();
+        return result;
+    }
+
+    /*@Override
+    public boolean equals(Object o) {
+        return (o instanceof Order) && (Objects.equals(((Food) o).getName(),
                 this.getName()) && (Objects.equals(((Food) o).getPrice(),
-                this.getPrice())))) {
-            return true;
-        } else {
-            return false;
-        }
+                this.getPrice())));
     }
 
     @Override
@@ -83,5 +97,5 @@ public class Food implements Serializable{
         int result;
         result = (value / 11);
         return result;
-    }
+    }*/
 }

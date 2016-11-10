@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.app.brensurio.iorder.MyFragmentCallback;
+import com.app.brensurio.iorder.interfaces.MyFragmentCallback;
 import com.app.brensurio.iorder.R;
 import com.app.brensurio.iorder.activities.MainActivity;
 
@@ -190,18 +190,11 @@ public class MainFragment extends Fragment {
         } else {
             callback.signIn(emailEditText.getText().toString(),
                     passwordEditText.getText().toString());
+
         }
     }
 
     private void onSignUp() {
         tabLayout.getTabAt(1).select();
-    }
-
-    public  String getEmail() {
-        return emailEditText.getText().toString();
-    }
-
-    public String getPassword() {
-        return passwordEditText.getText().toString();
     }
 }

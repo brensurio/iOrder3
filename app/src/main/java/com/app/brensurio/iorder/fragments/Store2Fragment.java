@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.app.brensurio.iorder.CustomerFoodListAdapter;
+import com.app.brensurio.iorder.adapters.CustomerFoodListAdapter;
 import com.app.brensurio.iorder.models.Food;
 import com.app.brensurio.iorder.R;
 import com.google.firebase.auth.FirebaseAuth;

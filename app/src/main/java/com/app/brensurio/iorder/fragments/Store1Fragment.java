@@ -40,7 +40,7 @@ public class Store1Fragment extends Fragment {
     private ArrayList<Food> orderList;
     private Store1FragmentListener store1FragmentCallback;
 
-    interface Store1FragmentListener {
+    public interface Store1FragmentListener {
         ArrayList<Food> getOrderList();
         void addToOrderList(Food food);
     }
@@ -93,9 +93,6 @@ public class Store1Fragment extends Fragment {
                             new CustomerFoodListAdapter(foodList, 1, name);
                     LinearLayoutManager linearLayoutManager =
                             new LinearLayoutManager(getActivity());
-                    foodRecycler.setLayoutManager(linearLayoutManager);
-                    foodRecycler.setAdapter(foodListAdapter);
-
                     foodListAdapter.setListener(new CustomerFoodListAdapter.Listener() {
                         @Override
                         public void onClick(int position) {
@@ -110,6 +107,8 @@ public class Store1Fragment extends Fragment {
                             }
                         }
                     });
+                    foodRecycler.setLayoutManager(linearLayoutManager);
+                    foodRecycler.setAdapter(foodListAdapter);
                 }
             }
             @Override

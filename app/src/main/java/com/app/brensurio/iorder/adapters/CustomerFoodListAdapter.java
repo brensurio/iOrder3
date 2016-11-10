@@ -6,8 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.app.brensurio.iorder.models.Food;
 import com.app.brensurio.iorder.R;
@@ -62,13 +64,13 @@ public class CustomerFoodListAdapter extends RecyclerView.Adapter<CustomerFoodLi
         TextView foodNameTextView = (TextView) cardView.findViewById(R.id.food_name_text_view);
         foodNameTextView.setText(food.get(position).getName());
         TextView foodPriceTextView = (TextView) cardView.findViewById(R.id.food_price_text_view);
-        foodPriceTextView.setText(food.get(position).getPrice());
+        foodPriceTextView.setText("P " + food.get(position).getPrice());
         TextView foodDescTextView = (TextView) cardView.findViewById(R.id.food_desc_text_view);
         foodDescTextView.setText(food.get(position).getDescription());
         ImageView foodImageView = (ImageView) cardView.findViewById(R.id.food_image_view);
         Picasso.with(foodImageView.getContext()).load(food.get(position).getImageLink())
                 .into(foodImageView);
-        Button addToCartButton = (Button) cardView.findViewById(R.id.update_button);
+        Button addToCartButton = (Button) cardView.findViewById(R.id.add_to_cart_button);
 
         addToCartButton.setOnClickListener(new View.OnClickListener(){
             @Override

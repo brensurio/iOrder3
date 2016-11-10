@@ -13,7 +13,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.ViewHolder> {
+public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.ViewHolder> {
 
     private List<Food> food;
 

@@ -34,6 +34,14 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_customer_main">CustomerMainActivity</string>
 
+    <!--Customer drawer menu-->
+    <string name="shop_now">Shop now</string>
+    <string name="cart">Cart</string>
+    <string name="account">Account</string>
+    <string name="log_out">Log out</string>
+    <string name="orders">Orders</string>
+    <string name="history_orders">History</string>
+    <!--Customer cards-->
     <string name="add_to_cart">Add to cart</string>
 
 </resources>
