@@ -41,7 +41,7 @@ public class SellerFoodListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final RecyclerView foodRecycler = (RecyclerView)
-                inflater.inflate(R.layout.fragment_seller_food_list, container, false);
+                inflater.inflate(R.layout.recycler_view, container, false);
 
         foodList = new ArrayList<>();
         mDatabase = FirebaseDatabase.getInstance().getReference();

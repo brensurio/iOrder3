@@ -43,5 +43,8 @@
     <string name="history_orders">History</string>
     <!--Customer cards-->
     <string name="add_to_cart">Add to cart</string>
+    <!--Order Fragment-->
+    <string name="total_amount">Total Amount:</string>
+    <string name="place_order">Place Order</string>
 
 </resources>

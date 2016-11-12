@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        android:enabled="true">
         <item
             android:id="@+id/nav_shop_now"
             android:icon="@drawable/ic_shop_black_24dp"
-            android:title= "@string/shop_now"/>
+            android:title= "@string/shop_now"
+            android:checkable="true"
+            android:enabled="true" />
         <item
             android:id="@+id/nav_cart"
             android:icon="@drawable/ic_shopping_cart_black_24dp"
-            android:title="@string/cart" />
+            android:title="@string/cart"
+            android:checkable="true"
+            android:enabled="true" />
         <item android:title="@string/orders"
             android:id="@+id/nav_orders"
-            android:icon="@drawable/ic_view_list_black_24dp" />
+            android:icon="@drawable/ic_view_list_black_24dp"
+            android:checkable="true"
+            android:enabled="true" />
         <item android:title="@string/history_orders"
             android:id="@+id/nav_history"
-            android:icon="@drawable/ic_timeline_black_24dp" />
+            android:icon="@drawable/ic_timeline_black_24dp"
+            android:checkable="true"
+            android:enabled="true" />
     </group>
 
     <item android:title="@string/account">

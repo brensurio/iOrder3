@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.app.brensurio.iorder.adapters.CustomerFoodListAdapter;
+import com.app.brensurio.iorder.interfaces.StoreFragmentListener;
 import com.app.brensurio.iorder.models.Food;
 import com.app.brensurio.iorder.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,23 +32,16 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Store1Fragment extends Fragment {
+public class SpecificStoreFragment extends Fragment {
 
     private DatabaseReference mDatabase;
     private String name;
     private String userName;
     private List<Food> foodList;
     private ArrayList<Food> orderList;
-    private Store1FragmentListener store1FragmentCallback;
+    private StoreFragmentListener storeFragmentCallback;
 
-    public interface Store1FragmentListener {
-        ArrayList<Food> getOrderList();
-        void addToOrderList(Food food);
-    }
-
-    public Store1Fragment() {
-        // Required empty public constructor
-    }
+    public SpecificStoreFragment() { }// Required empty public constructor
 
     /**
      * Called when a fragment is first attached to its context.
@@ -57,7 +51,7 @@ public class Store1Fragment extends Fragment {
      */
     @Override
     public void onAttach(Context context) {
-        store1FragmentCallback = (Store1FragmentListener) context;
+        storeFragmentCallback = (StoreFragmentListener) context;
         super.onAttach(context);
     }
 
@@ -65,12 +59,19 @@ public class Store1Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final RecyclerView foodRecycler = (RecyclerView)
-                inflater.inflate(R.layout.fragment_seller_food_list, container, false);
+                inflater.inflate(R.layout.recycler_view, container, false);
 
         foodList = new ArrayList<>();
         orderList = new ArrayList<>();
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        int storeNumber = getArguments().getInt("store_id");
         Query query = mDatabase.child("store1foodlist");
+        if (storeNumber == 1)
+            query = mDatabase.child("store1foodlist");
+        else if (storeNumber == 2)
+            query = mDatabase.child("store2foodlist");
+        else if (storeNumber == 3)
+            query = mDatabase.child("store3foodlist");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // Name, email address, and profile photo Url
@@ -80,36 +81,39 @@ public class Store1Fragment extends Fragment {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                foodList.clear();
                 for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
                     Food food = singleSnapshot.getValue(Food.class);
                     foodList.add(food);
-                    final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    if (user != null) {
-                        for (UserInfo profile : user.getProviderData()) {
-                            name = profile.getDisplayName();
+                }
+
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+                    for (UserInfo profile : user.getProviderData()) {
+                        name = profile.getDisplayName();
+                    }
+                }
+                CustomerFoodListAdapter foodListAdapter =
+                        new CustomerFoodListAdapter(foodList,
+                                getArguments().getInt("store_id"), name);
+                LinearLayoutManager linearLayoutManager =
+                        new LinearLayoutManager(getActivity());
+                foodListAdapter.setListener(new CustomerFoodListAdapter.Listener() {
+                    @Override
+                    public void onClick(int position) {
+                        Food food = foodList.get(position);
+                        if (storeFragmentCallback.getOrderList().contains(food)) {
+                            Toast.makeText(getActivity(), "Item is in cart already",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            storeFragmentCallback.addToOrderList(food);
+                            Toast.makeText(getActivity(), "Added to cart",
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
-                    CustomerFoodListAdapter foodListAdapter =
-                            new CustomerFoodListAdapter(foodList, 1, name);
-                    LinearLayoutManager linearLayoutManager =
-                            new LinearLayoutManager(getActivity());
-                    foodListAdapter.setListener(new CustomerFoodListAdapter.Listener() {
-                        @Override
-                        public void onClick(int position) {
-                            Food food = foodList.get(position);
-                            if (store1FragmentCallback.getOrderList().contains(food)) {
-                                Toast.makeText(getActivity(), "Item is in cart already",
-                                        Toast.LENGTH_SHORT).show();
-                            } else {
-                                store1FragmentCallback.addToOrderList(food);
-                                Toast.makeText(getActivity(), "Added to cart",
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                    foodRecycler.setLayoutManager(linearLayoutManager);
-                    foodRecycler.setAdapter(foodListAdapter);
-                }
+                });
+                foodRecycler.setLayoutManager(linearLayoutManager);
+                foodRecycler.setAdapter(foodListAdapter);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) { }

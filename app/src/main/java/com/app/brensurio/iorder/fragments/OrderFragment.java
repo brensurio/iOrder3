@@ -1,74 +1,65 @@
 package com.app.brensurio.iorder.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.brensurio.iorder.R;
+import com.app.brensurio.iorder.adapters.CustomerCartItemAdapter;
+import com.app.brensurio.iorder.interfaces.StoreFragmentListener;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OrderFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- */
 public class OrderFragment extends Fragment {
 
-    private OnFragmentInteractionListener mListener;
-
-    public OrderFragment() {
-        // Required empty public constructor
+    private static final String TAG = "RecyclerViewFragment";
+    private static final String KEY_LAYOUT_MANAGER = "layoutManager";
+    private static final int SPAN_COUNT = 2;
+    private enum LayoutManagerType {
+        GRID_LAYOUT_MANAGER,
+        LINEAR_LAYOUT_MANAGER
     }
 
+    protected LayoutManagerType mCurrentLayoutManagerType;
+    protected RecyclerView mRecyclerView;
+    protected RecyclerView.LayoutManager mLayoutManager;
+
+    private StoreFragmentListener storeFragmentCallback;
+
+    public OrderFragment() { } // Required empty public constructor
+
+    /**
+     * Called when a fragment is first attached to its context.
+     * {@link #onCreate(Bundle)} will be called after this.
+     *
+     * @param context
+     */
+    @Override
+    public void onAttach(Context context) {
+        storeFragmentCallback = (StoreFragmentListener) context;
+        super.onAttach(context);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_order, container, false);
-    }
+        View rootView = inflater.inflate(R.layout.fragment_order, container, false);
+        rootView.setTag(TAG);
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.customer_food_recycler);
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
+        // TODO: CREATE ADAPTER INSTANCE HERE.
+        CustomerCartItemAdapter customerCartItemAdapter =
+                new CustomerCartItemAdapter(storeFragmentCallback.getOrderList());
+        LinearLayoutManager linearLayoutManager =
+                new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+        mRecyclerView.setAdapter(customerCartItemAdapter);
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        return rootView;
     }
 }

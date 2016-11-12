@@ -17,11 +17,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-/**
- * Created by Mariz L. Maas on 11/3/2016.
- */
-
-public class CustomerFoodListAdapter extends RecyclerView.Adapter<CustomerFoodListAdapter.ViewHolder> {
+public class CustomerFoodListAdapter extends
+        RecyclerView.Adapter<CustomerFoodListAdapter.ViewHolder> {
 
     private List<Food> food;
     private String user;

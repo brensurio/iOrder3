@@ -8,6 +8,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -20,11 +21,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.app.brensurio.iorder.fragments.CartFragment;
+import com.app.brensurio.iorder.fragments.OrderFragment;
+import com.app.brensurio.iorder.fragments.StoreFragment;
+import com.app.brensurio.iorder.interfaces.StoreFragmentListener;
 import com.app.brensurio.iorder.models.Food;
 import com.app.brensurio.iorder.R;
-import com.app.brensurio.iorder.fragments.Store1Fragment;
-import com.app.brensurio.iorder.fragments.Store2Fragment;
-import com.app.brensurio.iorder.fragments.Store3Fragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -32,11 +34,12 @@ import java.util.ArrayList;
 
 public class CustomerMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        Store1Fragment.Store1FragmentListener {
+        StoreFragmentListener {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private ArrayList<Food> orderList;
+    private int currentPosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,22 +51,6 @@ public class CustomerMainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        ViewPager mViewPager = (ViewPager) findViewById(R.id.customer_container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.customer_tab_layout);
-        tabLayout.setupWithViewPager(mViewPager);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(CustomerMainActivity.this, CartActivity.class);
-                intent.putExtra("name", getIntent().getStringExtra("NAME"));
-                intent.putExtra("foodList", orderList);
-                startActivity(intent);
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -73,11 +60,35 @@ public class CustomerMainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().performIdentifierAction(R.id.nav_shop_now, 0);
+
         View headerLayout = navigationView.getHeaderView(0);
         TextView nameTextView = (TextView) headerLayout.findViewById(R.id.customer_name_text_view);
         nameTextView.setText(getIntent().getStringExtra("NAME"));
         TextView emailTextView = (TextView) headerLayout.findViewById(R.id.customer_email_text_view);
         emailTextView.setText(getIntent().getStringExtra("EMAIL"));
+
+        getSupportFragmentManager().addOnBackStackChangedListener(
+                new FragmentManager.OnBackStackChangedListener() {
+                    /**
+                     * Called whenever the contents of the back stack change.
+                     */
+                    @Override
+                    public void onBackStackChanged() {
+                        FragmentManager fragMan = getSupportFragmentManager();
+                        Fragment fragment = fragMan.findFragmentByTag("visible_fragment");
+                        if (fragment instanceof StoreFragment) {
+                            currentPosition = 0;
+                        }
+                        if (fragment instanceof CartFragment) {
+                            currentPosition = 1;
+                        }
+                        if (fragment instanceof OrderFragment) {
+                            currentPosition = 2;
+                        }
+                    }
+                }
+        );
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -145,20 +156,25 @@ public class CustomerMainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        currentPosition = id;
+        Fragment fragment = new StoreFragment();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
+        if (id == R.id.nav_shop_now) {
+            fragment = new StoreFragment();
+        } else if (id == R.id.nav_cart) {
+            fragment = new CartFragment();
+        } else if (id == R.id.nav_orders) {
+            fragment = new OrderFragment();
+        } else if (id == R.id.nav_history) {
 
         } else if (id == R.id.nav_log_out) {
             FirebaseAuth.getInstance().signOut();
         }
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_customer_main, fragment, "visible_fragment");
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -175,45 +191,10 @@ public class CustomerMainActivity extends AppCompatActivity
         this.orderList.add(food);
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            if (position == 0)
-                return new Store1Fragment();
-            else if (position == 1)
-                return new Store2Fragment();
-            else if (position == 2)
-                return new Store3Fragment();
-            else
-                return new Store1Fragment();
-        }
-
-        @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 3;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "STORE 1";
-                case 1:
-                    return "STORE 2";
-                case 2:
-                    return "STORE 3";
-            }
-            return null;
-        }
+    @Override
+    public void removeFromOrderList(Food food) {
+        this.orderList.remove(food);
     }
+
+
 }
