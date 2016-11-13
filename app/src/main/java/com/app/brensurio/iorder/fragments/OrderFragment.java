@@ -14,22 +14,25 @@ import android.widget.EditText;
 
 import com.app.brensurio.iorder.R;
 import com.app.brensurio.iorder.adapters.CustomerCartItemAdapter;
+import com.app.brensurio.iorder.adapters.CustomerOrderAdapter;
 import com.app.brensurio.iorder.interfaces.StoreFragmentListener;
 import com.app.brensurio.iorder.models.Food;
 import com.app.brensurio.iorder.models.Order;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class OrderFragment extends Fragment {
 
-    protected RecyclerView mRecyclerView;
-
-    private StoreFragmentListener storeFragmentCallback;
-    private EditText destinationEditText;
+    private List<Order> orderList;
     private DatabaseReference mDatabase;
+    private StoreFragmentListener storeFragmentCallback;
 
     public OrderFragment() { } // Required empty public constructor
 
@@ -48,8 +51,38 @@ public class OrderFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_order, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_order, container, false);
+        final RecyclerView mRecyclerView = (RecyclerView)
+                rootView.findViewById(R.id.customer_order_recycler);
+
+        orderList = new ArrayList<>();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        Query query = mDatabase.child("store1orders").orderByChild("customerName")
+                .equalTo(storeFragmentCallback.getCustomerName());
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                orderList.clear();
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    Order order = singleSnapshot.getValue(Order.class);
+                    if (order.getStatus().equalsIgnoreCase("PROCESSING"))
+                        orderList.add(order);
+                }
+
+                CustomerOrderAdapter customerOrderAdapter =
+                        new CustomerOrderAdapter(getActivity(), orderList);
+                LinearLayoutManager linearLayoutManager =
+                        new LinearLayoutManager(getActivity());
+
+                mRecyclerView.setLayoutManager(linearLayoutManager);
+                mRecyclerView.setAdapter(customerOrderAdapter);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        return rootView;
     }
-
-
 }

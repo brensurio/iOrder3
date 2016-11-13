@@ -121,8 +121,4 @@ public class SpecificStoreFragment extends Fragment {
 
         return foodRecycler;
     }
-
-    public ArrayList<Food> getOrderList() {
-        return this.orderList;
-    }
 }

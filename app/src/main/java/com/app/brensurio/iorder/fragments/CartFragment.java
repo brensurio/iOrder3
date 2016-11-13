@@ -60,7 +60,6 @@ public class CartFragment extends Fragment {
         destinationEditText = (EditText) rootView.findViewById(R.id.destination_editText);
         final TextView totalAmountTextView = (TextView) rootView.findViewById(R.id.amount_text_view);
         totalAmountTextView.setText(String.valueOf(getTotalAmount()));
-
         Button placeOrderButton = (Button) rootView.findViewById(R.id.place_order_button);
         placeOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
