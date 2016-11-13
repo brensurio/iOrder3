@@ -15,6 +15,7 @@ public class Order implements Serializable{
     String amount;
     String location;
     String status;
+    String store;
 
     public Order() { }
 
@@ -74,6 +75,14 @@ public class Order implements Serializable{
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getStore() {
+        return store;
+    }
+
+    public void setStore(String store) {
+        this.store = store;
     }
 
     @Override

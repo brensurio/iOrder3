@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.app.brensurio.iorder.fragments.CartFragment;
+import com.app.brensurio.iorder.fragments.HistoryFragment;
 import com.app.brensurio.iorder.fragments.OrderFragment;
 import com.app.brensurio.iorder.fragments.StoreFragment;
 import com.app.brensurio.iorder.interfaces.StoreFragmentListener;
@@ -168,7 +169,7 @@ public class CustomerMainActivity extends AppCompatActivity
         } else if (id == R.id.nav_orders) {
             fragment = new OrderFragment();
         } else if (id == R.id.nav_history) {
-
+            fragment = new HistoryFragment();
         } else if (id == R.id.nav_log_out) {
             FirebaseAuth.getInstance().signOut();
         }

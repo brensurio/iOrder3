@@ -125,15 +125,24 @@ public class CartFragment extends Fragment {
 
             if (!store1Order.isEmpty()) {
                 Order order = processOrder(store1Order);
-                String refno = mDatabase.child("store1orders").push().getKey();
+                order.setStore("store1");
+                String refno = mDatabase.child("storeorders").push().getKey();
                 order.setRefNo(refno);
-                mDatabase.child("store1orders").child(refno).setValue(order);
+                mDatabase.child("storeorders").child(refno).setValue(order);
             }
             if (!store2Order.isEmpty()) {
-                mDatabase.child("store2orders").push().setValue(processOrder(store2Order));
+                Order order = processOrder(store2Order);
+                order.setStore("store2");
+                String refno = mDatabase.child("storeorders").push().getKey();
+                order.setRefNo(refno);
+                mDatabase.child("storeorders").child(refno).setValue(order);
             }
             if (!store3Order.isEmpty()) {
-                mDatabase.child("store3orders").push().setValue(processOrder(store3Order));
+                Order order = processOrder(store2Order);
+                order.setStore("store3");
+                String refno = mDatabase.child("storeorders").push().getKey();
+                order.setRefNo(refno);
+                mDatabase.child("storeorders").child(refno).setValue(order);
             }
         }
     }
