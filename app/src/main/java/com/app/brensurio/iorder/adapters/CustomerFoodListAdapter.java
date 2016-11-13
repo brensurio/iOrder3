@@ -68,7 +68,6 @@ public class CustomerFoodListAdapter extends
         Picasso.with(foodImageView.getContext()).load(food.get(position).getImageLink())
                 .into(foodImageView);
         Button addToCartButton = (Button) cardView.findViewById(R.id.add_to_cart_button);
-
         addToCartButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {

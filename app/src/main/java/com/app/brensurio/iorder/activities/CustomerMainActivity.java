@@ -40,6 +40,7 @@ public class CustomerMainActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener mAuthListener;
     private ArrayList<Food> orderList;
     private int currentPosition = 0;
+    private String customerName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +90,6 @@ public class CustomerMainActivity extends AppCompatActivity
                     }
                 }
         );
-
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -103,6 +103,8 @@ public class CustomerMainActivity extends AppCompatActivity
                 }
             }
         };
+
+        customerName = getIntent().getStringExtra("NAME");
     }
 
     @Override
@@ -192,9 +194,7 @@ public class CustomerMainActivity extends AppCompatActivity
     }
 
     @Override
-    public void removeFromOrderList(Food food) {
-        this.orderList.remove(food);
+    public String getCustomerName() {
+        return this.customerName;
     }
-
-
 }

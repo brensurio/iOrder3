@@ -11,5 +11,5 @@ import java.util.ArrayList;
 public interface StoreFragmentListener {
     ArrayList<Food> getOrderList();
     void addToOrderList(Food food);
-    void removeFromOrderList(Food food);
+    String getCustomerName();
 }

@@ -133,7 +133,7 @@ public class SellerMainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_orders) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
             SellerFoodListFragment fragment = new SellerFoodListFragment();
@@ -141,11 +141,7 @@ public class SellerMainActivity extends AppCompatActivity
             fragment.setStoreName(storeName);
             ft.replace(R.id.content_seller_main, fragment);
             ft.commit();
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_history) {
 
         } else if (id == R.id.nav_send) {
             FirebaseAuth.getInstance().signOut();

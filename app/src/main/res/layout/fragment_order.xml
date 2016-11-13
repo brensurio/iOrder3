@@ -6,61 +6,9 @@
     tools:context="com.app.brensurio.iorder.fragments.OrderFragment"
     android:background="#E0E0E0">
 
-    <!-- TODO: Update blank fragment layout -->
-
-    <RelativeLayout
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/bottom_sheet_behavior">
-
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/customer_food_recycler"/>
-
-        <GridLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:columnCount="2"
-            android:layout_gravity="bottom"
-            android:layout_above="@+id/place_order_button"
-            android:layout_alignParentStart="true"
-            android:padding="16dp"
-            android:background="@android:color/white">
-
-            <TextView
-                android:text="@string/total_amount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView2"
-                android:layout_row="0"
-                android:layout_column="0"
-                android:textSize="20sp" />
-
-            <TextView
-                android:text="TextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/amount_text_view"
-                android:layout_row="0"
-                android:layout_column="1"
-                android:textSize="24sp"
-                android:layout_gravity="right" />
-
-        </GridLayout>
-
-        <Button
-            android:text="@string/place_order"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/place_order_button"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
-            android:background="@color/colorAccent"
-            android:textColor="@android:color/white"
-            android:layout_gravity="bottom"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true" />
-
-    </RelativeLayout>
+        android:id="@+id/customer_food_recycler"/>
 
 </FrameLayout>

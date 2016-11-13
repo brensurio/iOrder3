@@ -42,6 +42,8 @@ public class UploadFoodActivity extends AppCompatActivity {
     private String storeName;
     private String storeDBName;
     private StorageReference storeRef;
+    StorageReference storageRef;
+    FirebaseStorage storage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +56,8 @@ public class UploadFoodActivity extends AppCompatActivity {
         storeDBName = storeName.concat("foodlist");
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReferenceFromUrl("gs://iorder-72aca.appspot.com");
-        storeRef = storageRef.child(storeName + "/");
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReferenceFromUrl("gs://iorder-72aca.appspot.com");
 
         foodNameEditText = (EditText) findViewById(R.id.food_name_edit_text);
         foodPriceEditText = (EditText) findViewById(R.id.food_price_edit_text);
@@ -125,6 +126,8 @@ public class UploadFoodActivity extends AppCompatActivity {
     }
 
     private void upload() {
+        storageRef = storage.getReferenceFromUrl("gs://iorder-72aca.appspot.com");
+        storeRef = storageRef.child(storeName + "/");
         String imageRef = foodNameEditText.getText().toString().toLowerCase();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
@@ -135,7 +138,7 @@ public class UploadFoodActivity extends AppCompatActivity {
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
+
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override

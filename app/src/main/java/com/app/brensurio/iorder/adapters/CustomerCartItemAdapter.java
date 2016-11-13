@@ -3,7 +3,9 @@ package com.app.brensurio.iorder.adapters;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -48,7 +50,7 @@ public class CustomerCartItemAdapter extends
      * layout file.
      * <p>
      * The new ViewHolder will be used to display items of the adapter using
-     * {@link #onBindViewHolder(ViewHolder, int, List)}. Since it will be re-used to display
+     * . Since it will be re-used to display
      * different items in the data set, it is a good idea to cache references to sub views of
      * the View to avoid unnecessary {@link View#findViewById(int)} calls.
      *
@@ -81,7 +83,7 @@ public class CustomerCartItemAdapter extends
      * on (e.g. in a click listener), use {@link ViewHolder#getAdapterPosition()} which will
      * have the updated adapter position.
      * <p>
-     * Override {@link #onBindViewHolder(ViewHolder, int, List)} instead if Adapter can
+     * Override  instead if Adapter can
      * handle efficient partial bind.
      *
      * @param holder   The ViewHolder which should be updated to represent the contents of the
@@ -89,7 +91,7 @@ public class CustomerCartItemAdapter extends
      * @param position The position of the item within the adapter's data set.
      */
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
 
         CardView cardView = holder.cardView;
 
@@ -101,7 +103,40 @@ public class CustomerCartItemAdapter extends
         Picasso.with(foodImageView.getContext()).load(food.get(position).getImageLink())
                 .into(foodImageView);
 
+        TextView amountTextView = (TextView) cardView.findViewById(R.id.amount_text_view);
+        amountTextView.setText(String.valueOf(food.get(position).getAmount()));
 
+        ImageButton deleteButton = (ImageButton) cardView.findViewById(R.id.delete_item_button);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listener != null) {
+                    listener.onClickDeleteItem(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, getItemCount());
+                }
+            }
+        });
+        ImageButton decreaseAmountButton = (ImageButton) cardView.findViewById(R.id.decrease_amount_button);
+        decreaseAmountButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listener != null) {
+                    listener.onClickSubtractAmount(position);
+                    notifyItemChanged(position);
+                }
+            }
+        });
+        ImageButton increaseAmountButton = (ImageButton) cardView.findViewById(R.id.increase_amount_button);
+        increaseAmountButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listener != null) {
+                    listener.onClickAddAmount(position);
+                    notifyItemChanged(position);
+                }
+            }
+        });
     }
 
     /**

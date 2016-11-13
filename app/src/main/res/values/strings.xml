@@ -46,5 +46,9 @@
     <!--Order Fragment-->
     <string name="total_amount">Total Amount:</string>
     <string name="place_order">Place Order</string>
+    <string name="place_to_deliver">Place to deliver</string>
+    <!--Seller drawer menu-->
+    <string name="food_gallery">Food Gallery</string>
+    <string name="_0_00">0.00</string>
 
 </resources>

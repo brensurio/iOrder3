@@ -78,19 +78,17 @@ public class Order implements Serializable{
 
     @Override
     public boolean equals(Object o) {
-        if ((o instanceof Order) && (Objects.equals(((Order) o).getRefNo(),
-                this.getRefNo()))) {
-            return true;
-        } else {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Order order = (Order) o;
+
+        return getRefNo().equals(order.getRefNo());
+
     }
 
     @Override
     public int hashCode() {
-        int value = 7;
-        int result;
-        result = (value / 11);
-        return result;
+        return getRefNo().hashCode();
     }
 }
