@@ -66,7 +66,7 @@ public class HistoryFragment extends Fragment {
                 orderList.clear();
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                     Order order = singleSnapshot.getValue(Order.class);
-                    if (order.getStatus().equalsIgnoreCase("CONFIRMED"))
+                    if (!order.getStatus().equalsIgnoreCase("PROCESSING"))
                         orderList.add(order);
                 }
 

@@ -1,6 +1,7 @@
 package com.app.brensurio.iorder.fragments;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.app.brensurio.iorder.interfaces.SellerFragmentListener;
 import com.app.brensurio.iorder.models.Food;
 import com.app.brensurio.iorder.adapters.FoodListAdapter;
 import com.app.brensurio.iorder.R;
@@ -28,6 +30,7 @@ import java.util.List;
  */
 public class SellerFoodListFragment extends Fragment {
 
+    private SellerFragmentListener sellerFragmentCallback;
     private DatabaseReference mDatabase;
     private List<Food> foodList;
     private String storeName;
@@ -36,6 +39,11 @@ public class SellerFoodListFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @Override
+    public void onAttach(Context context) {
+        sellerFragmentCallback = (SellerFragmentListener) context;
+        super.onAttach(context);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,7 +53,7 @@ public class SellerFoodListFragment extends Fragment {
 
         foodList = new ArrayList<>();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        Query query = mDatabase.child(storeName.concat("foodlist"));
+        Query query = mDatabase.child(sellerFragmentCallback.getStoreName().concat("foodlist"));
 
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -53,12 +61,12 @@ public class SellerFoodListFragment extends Fragment {
                 for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
                     Food food = singleSnapshot.getValue(Food.class);
                     foodList.add(food);
-                    FoodListAdapter foodListAdapter = new FoodListAdapter(foodList);
-                    LinearLayoutManager linearLayoutManager =
-                            new LinearLayoutManager(getActivity());
-                    foodRecycler.setLayoutManager(linearLayoutManager);
-                    foodRecycler.setAdapter(foodListAdapter);
                 }
+                FoodListAdapter foodListAdapter = new FoodListAdapter(foodList);
+                LinearLayoutManager linearLayoutManager =
+                        new LinearLayoutManager(getActivity());
+                foodRecycler.setLayoutManager(linearLayoutManager);
+                foodRecycler.setAdapter(foodListAdapter);
             }
 
             @Override
@@ -69,9 +77,4 @@ public class SellerFoodListFragment extends Fragment {
 
         return foodRecycler;
     }
-
-    public void setStoreName(String name) {
-        this.storeName = name;
-    }
-
 }
