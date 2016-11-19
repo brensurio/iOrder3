@@ -25,7 +25,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/email_text_input_layout"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                app:passwordToggleEnabled="false">
 
                 <EditText
                     android:layout_width="match_parent"
@@ -41,7 +42,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/password_text_input_layout"
-                android:layout_marginTop="7dp">
+                android:layout_marginTop="7dp"
+                app:passwordToggleEnabled="true">
 
                 <EditText
                     android:layout_width="match_parent"

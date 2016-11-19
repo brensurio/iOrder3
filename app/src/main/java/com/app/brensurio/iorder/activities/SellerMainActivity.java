@@ -49,11 +49,11 @@ public class SellerMainActivity extends AppCompatActivity
     private String storeName;
 
     // Bluetooth variables
-    private BluetoothAdapter  btAdapter     = null;
-    private BluetoothSocket   btSocket      = null;
-    private OutputStream outputStream  = null;
-    public static final UUID MY_UUID   = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-    public static String address       = "20:15:04:15:15:60";
+    private BluetoothAdapter btAdapter = null;
+    private BluetoothSocket btSocket = null;
+    private OutputStream outputStream = null;
+    public static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+    public String address = "20:15:04:15:15:60";
 
     private String toPrinter;
 
@@ -66,6 +66,13 @@ public class SellerMainActivity extends AppCompatActivity
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         Intent intent = getIntent();
         storeName = intent.getStringExtra(STORE_NAME);
+
+        if (storeName.equalsIgnoreCase("store1"))
+            address = "20:15:04:15:15:60"; // Scoops
+        else if (storeName.equalsIgnoreCase("store2"))
+            address = "20:15:04:16:10:78";
+        else if (storeName.equalsIgnoreCase("store3"))
+            address = "20:15:04:16:10:93"; // ovenmade
 
         toPrinter = "";
 

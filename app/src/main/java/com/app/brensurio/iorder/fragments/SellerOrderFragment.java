@@ -1,6 +1,5 @@
 package com.app.brensurio.iorder.fragments;
 
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,10 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.brensurio.iorder.R;
-import com.app.brensurio.iorder.adapters.CustomerOrderAdapter;
 import com.app.brensurio.iorder.adapters.SellerOrderAdapter;
 import com.app.brensurio.iorder.interfaces.SellerFragmentListener;
-import com.app.brensurio.iorder.interfaces.StoreFragmentListener;
 import com.app.brensurio.iorder.models.Order;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -80,23 +77,33 @@ public class SellerOrderFragment extends Fragment {
                 sellerOrderAdapter.setListener(new SellerOrderAdapter.Listener() {
                     @Override
                     public void onViewOrder(int position) {
+
+                        // location | datetoday | orderid | payment | change | qty1 | food1 | subtotal1 | qty2 | food2 | subtotal2 | qtyN | foodN | subtotalN
+
                         String data;
 
                         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy hh:mm:ss");
                         Date date = new Date();
-                        String dateToday =dateFormat.format(date);
+                        String dateToday = dateFormat.format(date);
                         String refno = orderList.get(position).getRefNo().substring(5, 11);
                         String location = orderList.get(position).getLocation();
 
-                        data = location + "|" + dateToday + "|" + refno + "|"
-                                + orderList.get(position).getAmount();
+                        data = location + "|" + dateToday + "|" + refno + "|" + "1"+ "|" + "1" + "|";
 
                         for (String string : orderList.get(position).getItems()) {
-                            data += "|" + string;
+                            data += "1" + "|" + string + "1";
                         }
 
                         sellerFragmentListener.setString(data);
                         sellerFragmentListener.transmitData();
+
+                        DatabaseReference databaseReference =
+                                mDatabase.child("storeorders")
+                                        .child(orderList.get(position).getRefNo());
+                        Map<String, Object> statusUpdate = new HashMap<>();
+                        statusUpdate.put("status", "CONFIRMED");
+                        databaseReference.updateChildren(statusUpdate);
+
                     }
 
                     @Override

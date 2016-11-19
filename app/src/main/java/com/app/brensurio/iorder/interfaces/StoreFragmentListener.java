@@ -12,4 +12,5 @@ public interface StoreFragmentListener {
     ArrayList<Food> getOrderList();
     void addToOrderList(Food food);
     String getCustomerName();
+    void loading();
 }

@@ -2,6 +2,7 @@ package com.app.brensurio.iorder.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -10,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,6 +21,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.app.brensurio.iorder.fragments.CartFragment;
@@ -42,6 +47,12 @@ public class CustomerMainActivity extends AppCompatActivity
     private ArrayList<Food> orderList;
     private int currentPosition = 0;
     private String customerName;
+    private Toolbar toolbar;
+    private ProgressBar progressBar;
+    private LinearLayout linearLayout;
+
+    CountDownTimer mCountDownTimer;
+    int i = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +62,8 @@ public class CustomerMainActivity extends AppCompatActivity
         mAuth = FirebaseAuth.getInstance();
         orderList = new ArrayList<>();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Store menus");
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -106,6 +118,9 @@ public class CustomerMainActivity extends AppCompatActivity
         };
 
         customerName = getIntent().getStringExtra("NAME");
+
+        progressBar = (ProgressBar) findViewById(R.id.progressBar3);
+        linearLayout = (LinearLayout) findViewById(R.id.linear_layout);
     }
 
     @Override
@@ -164,12 +179,16 @@ public class CustomerMainActivity extends AppCompatActivity
 
         if (id == R.id.nav_shop_now) {
             fragment = new StoreFragment();
+            toolbar.setTitle("Store menus");
         } else if (id == R.id.nav_cart) {
             fragment = new CartFragment();
+            toolbar.setTitle("Your food cart");
         } else if (id == R.id.nav_orders) {
             fragment = new OrderFragment();
+            toolbar.setTitle("Orders");
         } else if (id == R.id.nav_history) {
             fragment = new HistoryFragment();
+            toolbar.setTitle("Past Orders");
         } else if (id == R.id.nav_log_out) {
             FirebaseAuth.getInstance().signOut();
         }
@@ -197,5 +216,23 @@ public class CustomerMainActivity extends AppCompatActivity
     @Override
     public String getCustomerName() {
         return this.customerName;
+    }
+
+    @Override
+    public void loading() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        linearLayout.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+
+        new CountDownTimer(1000, 100) {
+            public void onTick(long millisUntilFinished) { }
+
+            public void onFinish() {
+                linearLayout.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            }
+        }.start();
     }
 }

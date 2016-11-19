@@ -102,11 +102,11 @@ public class StoreFragment extends Fragment {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "STORE 1";
+                    return "SCOOPS";
                 case 1:
-                    return "STORE 2";
+                    return "NANAY'S CUISINE";
                 case 2:
-                    return "STORE 3";
+                    return "OVEN MAID";
             }
             return null;
         }

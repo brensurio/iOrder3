@@ -11,6 +11,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.app.brensurio.iorder.interfaces.MyFragmentCallback;
@@ -43,64 +47,20 @@ public class MainActivity extends AppCompatActivity implements MyFragmentCallbac
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+    private ProgressBar progressBar;
+    private LinearLayout linearLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        progressBar = (ProgressBar) findViewById(R.id.progressBar2);
+        linearLayout = (LinearLayout) findViewById(R.id.linear_layout);
+        loading();
+
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // If user is signed in
-                    Query eidQuery = mDatabase.child("users").orderByChild("email")
-                            .equalTo(user.getEmail());
-                    eidQuery.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
-                                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                                    Map m = (Map) postSnapshot.getValue();
-                                    String eid = m.get("eid").toString();
-                                    String email = m.get("email").toString();
-                                    String name = m.get("firstName").toString() + " "
-                                            + m.get("lastName").toString();
-                                    if (eid.substring(0, 1).equalsIgnoreCase("s")) {
-                                        Intent intent = new Intent(MainActivity.this,
-                                                SellerMainActivity.class);
-                                        if (eid.substring(1, 2).equalsIgnoreCase("a"))
-                                            intent.putExtra(MainActivity.STORE_NAME,
-                                                    MainActivity.STORE_1);
-                                        else if (eid.substring(1, 2).equalsIgnoreCase("b"))
-                                            intent.putExtra(MainActivity.STORE_NAME,
-                                                    MainActivity.STORE_2);
-                                        else if (eid.substring(1, 2).equalsIgnoreCase("c"))
-                                            intent.putExtra(MainActivity.STORE_NAME,
-                                                    MainActivity.STORE_3);
-                                        startActivity(intent);
-                                        finish();
-                                    } else if (eid.substring(0, 1).equalsIgnoreCase("f")) {
-                                        Intent intent = new Intent(MainActivity.this,
-                                                CustomerMainActivity.class);
-                                        intent.putExtra("NAME", name);
-                                        intent.putExtra("EMAIL", email);
-                                        startActivity(intent);
-                                    }
-                                }
-                            }
-                        }
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) { }
-                    });
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                }
-            }
-        };
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -118,6 +78,63 @@ public class MainActivity extends AppCompatActivity implements MyFragmentCallbac
     @Override
     public void onStart() {
         super.onStart();
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    loading();
+                    // If user is signed in
+                    Query eidQuery = mDatabase.child("users").orderByChild("email")
+                            .equalTo(user.getEmail());
+                    eidQuery.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                                    Map m = (Map) postSnapshot.getValue();
+                                    String eid = m.get("eid").toString().toLowerCase();
+                                    String email = m.get("email").toString();
+                                    String name = m.get("firstName").toString() + " "
+                                            + m.get("lastName").toString();
+                                    if (eid.substring(0, 1).equalsIgnoreCase("s")) {
+                                        Intent intent = new Intent(MainActivity.this,
+                                                SellerMainActivity.class);
+                                        if (eid.substring(1, 2).equalsIgnoreCase("a"))
+                                            intent.putExtra(MainActivity.STORE_NAME,
+                                                    MainActivity.STORE_1);
+                                        else if (eid.substring(1, 2).equalsIgnoreCase("b"))
+                                            intent.putExtra(MainActivity.STORE_NAME,
+                                                    MainActivity.STORE_2);
+                                        else if (eid.substring(1, 2).equalsIgnoreCase("c"))
+                                            intent.putExtra(MainActivity.STORE_NAME,
+                                                    MainActivity.STORE_3);
+                                        //loading();
+                                        startActivity(intent);
+                                    } else if (eid.substring(0, 1).equalsIgnoreCase("f")) {
+                                        Intent intent = new Intent(MainActivity.this,
+                                                CustomerMainActivity.class);
+                                        intent.putExtra("NAME", name);
+                                        intent.putExtra("EMAIL", email);
+                                        //loading();
+                                        startActivity(intent);
+                                    }
+                                }
+                            }
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) { }
+                    });
+                } else {
+                    // User is signed out
+                    unload();
+                    Toast.makeText(MainActivity.this, "Please sign in",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+
         mAuth.addAuthStateListener(mAuthListener);
     }
 
@@ -131,15 +148,20 @@ public class MainActivity extends AppCompatActivity implements MyFragmentCallbac
 
     @Override
     public void signUp(String email, String password) {
+        loading();
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        Toast.makeText(MainActivity.this, "Account created!",
+                                Toast.LENGTH_SHORT).show();
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-                            // TODO: Create action if no user is signed in
+                            unload();
+                            Toast.makeText(MainActivity.this, "Sign up failed",
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -147,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements MyFragmentCallbac
 
     @Override
     public void signIn(String email, String password) {
+        loading();
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -156,11 +179,25 @@ public class MainActivity extends AppCompatActivity implements MyFragmentCallbac
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
+                            unload();
                             Toast.makeText(MainActivity.this, "Failed!",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+
+    private void loading() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        linearLayout.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void unload() {
+        linearLayout.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
     /**

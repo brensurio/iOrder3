@@ -231,7 +231,7 @@ public class SignUpFragment extends Fragment {
         } else {
             if (doesPasswordMatch()) {
                 Query eidQuery = mDatabase.child("eidlist").orderByChild("eid")
-                        .equalTo(eidEditText.getText().toString());
+                        .equalTo(eidEditText.getText().toString().toUpperCase());
                 eidQuery.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -240,12 +240,11 @@ public class SignUpFragment extends Fragment {
                                     passwordEditText.getText().toString());
                             User user = new User(nameEditText.getText().toString(),
                                     surnameEditText.getText().toString(),
-                                    eidEditText.getText().toString(),
+                                    eidEditText.getText().toString().toLowerCase(),
                                     emailEditText.getText().toString());
                             mDatabase.child("users").push().setValue(user);
-                            Toast.makeText(getActivity(), "Account created!",
-                                    Toast.LENGTH_SHORT).show();
-                            tabLayout.getTabAt(0).select();
+                        } else {
+
                         }
                     }
                     @Override

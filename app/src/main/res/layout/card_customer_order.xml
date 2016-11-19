@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="80dp" >
+    android:layout_height="80dp"
+    android:layout_marginBottom="1dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,7 +17,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/ref_text_view"
             android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true" />
+            android:layout_alignParentLeft="true"
+            android:textSize="10sp" />
 
         <TextView
             android:text="TextView"
@@ -25,7 +27,8 @@
             android:id="@+id/status_text_view"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/status_icon"
-            android:layout_marginRight="8dp" />
+            android:layout_marginRight="8dp"
+            android:textSize="10sp" />
 
         <ImageView
             android:layout_width="25dp"

@@ -102,7 +102,9 @@ public class SpecificStoreFragment extends Fragment {
                     @Override
                     public void onClick(int position) {
                         Food food = foodList.get(position);
+                        storeFragmentCallback.loading();
                         if (storeFragmentCallback.getOrderList().contains(food)) {
+
                             Toast.makeText(getActivity(), "Item is in cart already",
                                     Toast.LENGTH_SHORT).show();
                         } else {

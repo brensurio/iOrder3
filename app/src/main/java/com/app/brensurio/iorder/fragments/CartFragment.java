@@ -57,7 +57,6 @@ public class CartFragment extends Fragment {
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        destinationEditText = (EditText) rootView.findViewById(R.id.destination_editText);
         final TextView totalAmountTextView = (TextView) rootView.findViewById(R.id.amount_text_view);
         totalAmountTextView.setText(String.valueOf(getTotalAmount()));
         Button placeOrderButton = (Button) rootView.findViewById(R.id.place_order_button);
@@ -108,7 +107,7 @@ public class CartFragment extends Fragment {
     }
 
     private void placeOrder() {
-        if (!TextUtils.isEmpty(destinationEditText.getText().toString())) {
+        /*if (!TextUtils.isEmpty(destinationEditText.getText().toString())) {
             List<Food> store1Order = new ArrayList<>();
             List<Food> store2Order = new ArrayList<>();
             List<Food> store3Order = new ArrayList<>();
@@ -138,13 +137,13 @@ public class CartFragment extends Fragment {
                 mDatabase.child("storeorders").child(refno).setValue(order);
             }
             if (!store3Order.isEmpty()) {
-                Order order = processOrder(store2Order);
+                Order order = processOrder(store3Order);
                 order.setStore("store3");
                 String refno = mDatabase.child("storeorders").push().getKey();
                 order.setRefNo(refno);
                 mDatabase.child("storeorders").child(refno).setValue(order);
             }
-        }
+        }*/
     }
 
     private Order processOrder(List<Food> foodList) {
