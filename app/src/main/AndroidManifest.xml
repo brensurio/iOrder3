@@ -6,12 +6,9 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <uses-feature android:name="android.hardware.screen.portrait" />
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
-
-    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -46,7 +43,7 @@
             android:name=".activities.CustomerMainActivity"
             android:label="@string/title_activity_customer_main"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.CartActivity" />
+        <activity android:name=".activities.CheckOutActivity"></activity>
     </application>
 
 </manifest>

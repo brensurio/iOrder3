@@ -2,6 +2,7 @@ package com.app.brensurio.iorder.fragments;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.app.brensurio.iorder.R;
+import com.app.brensurio.iorder.activities.CheckOutActivity;
 import com.app.brensurio.iorder.adapters.CustomerCartItemAdapter;
 import com.app.brensurio.iorder.interfaces.StoreFragmentListener;
 import com.app.brensurio.iorder.models.Food;
@@ -63,8 +65,8 @@ public class CartFragment extends Fragment {
         placeOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                placeOrder();
-                getActivity().getFragmentManager().popBackStack();
+                Intent intent = new Intent(getContext(), CheckOutActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -106,67 +108,6 @@ public class CartFragment extends Fragment {
         return rootView;
     }
 
-    private void placeOrder() {
-        /*if (!TextUtils.isEmpty(destinationEditText.getText().toString())) {
-            List<Food> store1Order = new ArrayList<>();
-            List<Food> store2Order = new ArrayList<>();
-            List<Food> store3Order = new ArrayList<>();
-            List<Food> orderList = storeFragmentCallback.getOrderList();
-
-            for (Food food : orderList) {
-                if (food.getStore().equalsIgnoreCase("store1"))
-                    store1Order.add(food);
-                else if (food.getStore().equalsIgnoreCase("store2"))
-                    store2Order.add(food);
-                else if (food.getStore().equalsIgnoreCase("store3"))
-                    store3Order.add(food);
-            }
-
-            if (!store1Order.isEmpty()) {
-                Order order = processOrder(store1Order);
-                order.setStore("store1");
-                String refno = mDatabase.child("storeorders").push().getKey();
-                order.setRefNo(refno);
-                mDatabase.child("storeorders").child(refno).setValue(order);
-            }
-            if (!store2Order.isEmpty()) {
-                Order order = processOrder(store2Order);
-                order.setStore("store2");
-                String refno = mDatabase.child("storeorders").push().getKey();
-                order.setRefNo(refno);
-                mDatabase.child("storeorders").child(refno).setValue(order);
-            }
-            if (!store3Order.isEmpty()) {
-                Order order = processOrder(store3Order);
-                order.setStore("store3");
-                String refno = mDatabase.child("storeorders").push().getKey();
-                order.setRefNo(refno);
-                mDatabase.child("storeorders").child(refno).setValue(order);
-            }
-        }*/
-    }
-
-    private Order processOrder(List<Food> foodList) {
-        Order order;
-
-        String customerName = storeFragmentCallback.getCustomerName();
-        String refNo = "";
-        List<String> items = new ArrayList<>();
-        String amount = "";
-        String location = destinationEditText.getText().toString();
-        String status = "PROCESSING";
-
-        double totalAmount = 0;
-        for (Food food : foodList) {
-            items.add(food.getName());
-            totalAmount += (Double.parseDouble(food.getPrice()) * food.getAmount());
-        }
-
-        order = new Order(customerName, refNo, items,
-                String.valueOf(totalAmount), location, status);
-
-        return order;
-    }
 
     private double getTotalAmount() {
         double totalAmount = 0;

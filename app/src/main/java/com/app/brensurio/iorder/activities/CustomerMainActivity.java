@@ -51,16 +51,19 @@ public class CustomerMainActivity extends AppCompatActivity
     private ProgressBar progressBar;
     private LinearLayout linearLayout;
 
-    CountDownTimer mCountDownTimer;
-    int i = 0;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_main);
 
         mAuth = FirebaseAuth.getInstance();
-        orderList = new ArrayList<>();
+
+        if (savedInstanceState != null) {
+            orderList = savedInstanceState.getParcelableArrayList("foodlist");
+        } else {
+            orderList = new ArrayList<>();
+        }
+
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Store menus");
@@ -151,7 +154,13 @@ public class CustomerMainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.customer_main, menu);
-        return true;
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList("foodlist", orderList);
     }
 
     @Override
@@ -162,7 +171,14 @@ public class CustomerMainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_cart) {
+            toolbar.setTitle("Your food cart");
+            Fragment fragment = new CartFragment();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.content_customer_main, fragment, "visible_fragment");
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.commit();
+
             return true;
         }
 

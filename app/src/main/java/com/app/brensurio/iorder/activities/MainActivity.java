@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements MyFragmentCallbac
                                                     MainActivity.STORE_3);
                                         //loading();
                                         startActivity(intent);
+                                        finish();
                                     } else if (eid.substring(0, 1).equalsIgnoreCase("f")) {
                                         Intent intent = new Intent(MainActivity.this,
                                                 CustomerMainActivity.class);
@@ -119,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements MyFragmentCallbac
                                         intent.putExtra("EMAIL", email);
                                         //loading();
                                         startActivity(intent);
+                                        finish();
                                     }
                                 }
                             }

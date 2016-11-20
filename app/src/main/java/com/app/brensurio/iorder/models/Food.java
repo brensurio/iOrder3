@@ -1,5 +1,8 @@
 package com.app.brensurio.iorder.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -7,7 +10,7 @@ import java.util.Objects;
  * Created by Mariz L. Maas on 10/24/2016.
  */
 
-public class Food implements Serializable{
+public class Food implements Parcelable {
     private String name;
     private String price;
     private String description;
@@ -92,4 +95,41 @@ public class Food implements Serializable{
         result = 31 * result + getPrice().hashCode();
         return result;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.name);
+        dest.writeString(this.price);
+        dest.writeString(this.description);
+        dest.writeString(this.imageLink);
+        dest.writeString(this.store);
+        dest.writeInt(this.amount);
+    }
+
+    protected Food(Parcel in) {
+        this.name = in.readString();
+        this.price = in.readString();
+        this.description = in.readString();
+        this.imageLink = in.readString();
+        this.store = in.readString();
+        this.amount = in.readInt();
+    }
+
+    public static final Parcelable.Creator<Food> CREATOR = new Parcelable.Creator<Food>() {
+        @Override
+        public Food createFromParcel(Parcel source) {
+            return new Food(source);
+        }
+
+        @Override
+        public Food[] newArray(int size) {
+            return new Food[size];
+        }
+    };
 }

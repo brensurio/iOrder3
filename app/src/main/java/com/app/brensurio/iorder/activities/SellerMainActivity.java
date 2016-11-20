@@ -83,7 +83,6 @@ public class SellerMainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Intent intent = new Intent(SellerMainActivity.this, UploadFoodActivity.class);
                 intent.putExtra(STORE_NAME, storeName);
                 startActivity(intent);
