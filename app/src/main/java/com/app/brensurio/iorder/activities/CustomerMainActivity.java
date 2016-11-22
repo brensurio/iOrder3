@@ -110,9 +110,9 @@ public class CustomerMainActivity extends AppCompatActivity
                 if (user != null) {
 
                 } else {
-                    finish();
                     Intent intent = new Intent(CustomerMainActivity.this, MainActivity.class);
                     startActivity(intent);
+                    finish();
                 }
             }
         };
@@ -204,6 +204,13 @@ public class CustomerMainActivity extends AppCompatActivity
             toolbar.setTitle("Past Orders");
         } else if (id == R.id.nav_log_out) {
             FirebaseAuth.getInstance().signOut();
+        } else if (id == R.id.nav_details) {
+            Intent intent = new Intent(this, AccountDetailActivity.class);
+            startActivity(intent);
+
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+            return true;
         }
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

@@ -36,7 +36,7 @@
     <string name="log_out">Log out</string>
     <string name="orders">Orders</string>
     <string name="history_orders">History</string>
-    <string name="details">Details</string>
+    <string name="details">Change password</string>
 
     <!--Customer cards-->
     <string name="add_to_cart">Add to cart</string>
@@ -66,4 +66,9 @@
     <string name="messsage">Once order is placed, it can\'t be cancelled.</string>
     <string name="popositive">Proceed</string>
     <string name="ponegative">Cancel</string>
+
+    <!--Sign up dialog-->
+    <string name="sutitle">Sign up?</string>
+    <string name="sumessage">Check details. Incorrect detail will immediately null sign up</string>
+
 </resources>

@@ -8,10 +8,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.app.brensurio.iorder.R;
 import com.app.brensurio.iorder.adapters.SellerOrderAdapter;
 import com.app.brensurio.iorder.interfaces.SellerFragmentListener;
+import com.app.brensurio.iorder.models.Food;
 import com.app.brensurio.iorder.models.Order;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -78,22 +80,28 @@ public class SellerOrderFragment extends Fragment {
                     @Override
                     public void onViewOrder(int position) {
 
-                        // location | datetoday | orderid | payment | change | qty1 | food1 | subtotal1 | qty2 | food2 | subtotal2 | qtyN | foodN | subtotalN
-                        // TODO: SEND ORDER DETAILS TO BLUETOOTH
-                        /*String data;
+                        // total | date | refno | location | subtotal1 | foodname1 | quantity1 | subtotalN | foodnameN | quantityN
+                        String data;
 
-                        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy hh:mm:ss");
-                        Date date = new Date();
-                        String dateToday = dateFormat.format(date);
-                        String refno = orderList.get(position).getRefNo().substring(5, 11);
+                        String total = Double.toString(orderList.get(position).getAmount());
+                        String date = orderList.get(position).getDatetime().substring(0, 17);
+                        Toast.makeText(getActivity(), date, Toast.LENGTH_SHORT).show();
+                        String refNo = orderList.get(position).getRefNo().substring(6, 12);
                         String location = orderList.get(position).getLocation();
 
-                        data = location + "|" + dateToday + "|" + refno + "|" + "1"+ "|" + "1" + "|";
+                        data = total + "|" + date + "|" + refNo + "|" + location + "|";
 
-                        for (String string : orderList.get(position).getItems()) {
-                            data += "1" + "|" + string + "1";
+                        for (Food food : orderList.get(position).getItems()) {
+                            String subtotal;
+                            String foodname;
+                            String quantity;
+
+                            subtotal = Double.toString(food.getPrice() * food.getAmount());
+                            foodname = food.getName().substring(0, 3);
+                            quantity = Integer.toString(food.getAmount());
+
+                            data += subtotal + "|" + foodname + "|" + quantity + "|";
                         }
-
                         sellerFragmentListener.setString(data);
                         sellerFragmentListener.transmitData();
 
@@ -102,7 +110,7 @@ public class SellerOrderFragment extends Fragment {
                                         .child(orderList.get(position).getRefNo());
                         Map<String, Object> statusUpdate = new HashMap<>();
                         statusUpdate.put("status", "CONFIRMED");
-                        databaseReference.updateChildren(statusUpdate);*/
+                        databaseReference.updateChildren(statusUpdate);
 
                     }
 

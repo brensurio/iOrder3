@@ -61,7 +61,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/sign_in_button"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                style="@style/Widget.AppCompat.Button.Colored" />
 
             <TextView
                 android:text="@string/sign_up_link_text"

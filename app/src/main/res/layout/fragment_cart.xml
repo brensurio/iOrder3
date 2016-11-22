@@ -71,7 +71,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/place_order_button"
             style="@style/Widget.AppCompat.Button.Colored"
-            android:background="@color/colorAccent"
             android:textColor="@android:color/white"
             android:layout_gravity="bottom" />
 
