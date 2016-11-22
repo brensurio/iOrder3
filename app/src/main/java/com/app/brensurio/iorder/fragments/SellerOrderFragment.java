@@ -79,8 +79,8 @@ public class SellerOrderFragment extends Fragment {
                     public void onViewOrder(int position) {
 
                         // location | datetoday | orderid | payment | change | qty1 | food1 | subtotal1 | qty2 | food2 | subtotal2 | qtyN | foodN | subtotalN
-
-                        String data;
+                        // TODO: SEND ORDER DETAILS TO BLUETOOTH
+                        /*String data;
 
                         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy hh:mm:ss");
                         Date date = new Date();
@@ -102,7 +102,7 @@ public class SellerOrderFragment extends Fragment {
                                         .child(orderList.get(position).getRefNo());
                         Map<String, Object> statusUpdate = new HashMap<>();
                         statusUpdate.put("status", "CONFIRMED");
-                        databaseReference.updateChildren(statusUpdate);
+                        databaseReference.updateChildren(statusUpdate);*/
 
                     }
 

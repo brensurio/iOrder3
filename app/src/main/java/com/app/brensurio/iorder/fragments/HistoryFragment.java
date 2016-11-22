@@ -14,6 +14,7 @@ import com.app.brensurio.iorder.R;
 import com.app.brensurio.iorder.adapters.CustomerOrderAdapter;
 import com.app.brensurio.iorder.interfaces.StoreFragmentListener;
 import com.app.brensurio.iorder.models.Order;
+import com.app.brensurio.iorder.ui.CustomRecyclerView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -52,8 +53,8 @@ public class HistoryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_history, container, false);
-        final RecyclerView mRecyclerView = (RecyclerView)
+        final View rootView = inflater.inflate(R.layout.fragment_history, container, false);
+        final CustomRecyclerView mRecyclerView = (CustomRecyclerView)
                 rootView.findViewById(R.id.customer_history_recycler);
 
         orderList = new ArrayList<>();
@@ -76,6 +77,7 @@ public class HistoryFragment extends Fragment {
                         new LinearLayoutManager(getActivity());
 
                 mRecyclerView.setLayoutManager(linearLayoutManager);
+                mRecyclerView.setEmptyView(rootView.findViewById(R.id.textView5));
                 mRecyclerView.setAdapter(customerOrderAdapter);
             }
             @Override

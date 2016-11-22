@@ -6,13 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.app.brensurio.iorder.R;
@@ -20,32 +17,22 @@ import com.app.brensurio.iorder.activities.CheckOutActivity;
 import com.app.brensurio.iorder.adapters.CustomerCartItemAdapter;
 import com.app.brensurio.iorder.interfaces.StoreFragmentListener;
 import com.app.brensurio.iorder.models.Food;
-import com.app.brensurio.iorder.models.Order;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.app.brensurio.iorder.ui.CustomRecyclerView;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class CartFragment extends Fragment {
 
-    protected RecyclerView mRecyclerView;
-
+    protected CustomRecyclerView mRecyclerView;
     private StoreFragmentListener storeFragmentCallback;
-    private EditText destinationEditText;
-    private DatabaseReference mDatabase;
+    Button placeOrderButton;
+    TextView totalAmountTextView;
+
+    CustomerCartItemAdapter customerCartItemAdapter;
 
     public CartFragment() { } // Required empty public constructor
 
-    /**
-     * Called when a fragment is first attached to its context.
-     * {@link #onCreate(Bundle)} will be called after this.
-     *
-     * @param context
-     */
     @Override
     public void onAttach(Context context) {
         storeFragmentCallback = (StoreFragmentListener) context;
@@ -57,26 +44,28 @@ public class CartFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_cart, container, false);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        final TextView totalAmountTextView = (TextView) rootView.findViewById(R.id.amount_text_view);
+        totalAmountTextView = (TextView) rootView.findViewById(R.id.amount_text_view);
         totalAmountTextView.setText(String.valueOf(getTotalAmount()));
-        Button placeOrderButton = (Button) rootView.findViewById(R.id.place_order_button);
+
+        placeOrderButton = (Button) rootView.findViewById(R.id.place_order_button);
+        checkOrderList();
         placeOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), CheckOutActivity.class);
-                startActivity(intent);
+                intent.putExtra("customerName", storeFragmentCallback.getCustomerName());
+                intent.putParcelableArrayListExtra("orderList",
+                        storeFragmentCallback.getOrderList());
+                startActivityForResult(intent, 1);
             }
         });
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.customer_food_recycler);
+        mRecyclerView = (CustomRecyclerView) rootView.findViewById(R.id.customer_food_recycler);
 
-        CustomerCartItemAdapter customerCartItemAdapter =
-                new CustomerCartItemAdapter(storeFragmentCallback.getOrderList());
+        customerCartItemAdapter =
+                new CustomerCartItemAdapter(storeFragmentCallback.getOrderList(), getActivity());
         LinearLayoutManager linearLayoutManager =
                 new LinearLayoutManager(getActivity());
-
         customerCartItemAdapter.setListener(new CustomerCartItemAdapter.Listener() {
             @Override
             public void onClickAddAmount(int position) {
@@ -84,13 +73,13 @@ public class CartFragment extends Fragment {
                 storeFragmentCallback.getOrderList().get(position).setAmount(i);
                 totalAmountTextView.setText(String.valueOf(getTotalAmount()));
             }
-
             @Override
-            public void onClickDeleteItem(int position) {
+            public void onClickDeleteItem(final int position) {
                 storeFragmentCallback.getOrderList().remove(position);
                 totalAmountTextView.setText(String.valueOf(getTotalAmount()));
+                customerCartItemAdapter.notifyDataSetChanged();
+                checkOrderList();
             }
-
             @Override
             public void onClickSubtractAmount(int position) {
                 int i = storeFragmentCallback.getOrderList().get(position).getAmount();
@@ -100,12 +89,31 @@ public class CartFragment extends Fragment {
                 }
             }
         });
-
         mRecyclerView.setLayoutManager(linearLayoutManager);
+        mRecyclerView.setEmptyView(rootView.findViewById(R.id.textView4));
         mRecyclerView.setAdapter(customerCartItemAdapter);
-        customerCartItemAdapter.notifyDataSetChanged();
 
         return rootView;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == 1) {
+                storeFragmentCallback.getOrderList().clear();
+                customerCartItemAdapter.notifyDataSetChanged();
+                totalAmountTextView.setText(String.valueOf(getTotalAmount()));
+            }
+        }
+    }
+
+    private void checkOrderList() {
+        if (storeFragmentCallback.getOrderList().isEmpty()){
+            placeOrderButton.setEnabled(false);
+        } else {
+            placeOrderButton.setEnabled(true);
+        }
     }
 
 
@@ -113,11 +121,10 @@ public class CartFragment extends Fragment {
         double totalAmount = 0;
         if (!storeFragmentCallback.getOrderList().isEmpty()) {
             for (Food food : storeFragmentCallback.getOrderList()) {
-                totalAmount += (Double.parseDouble(food.getPrice()) * food.getAmount());
+                totalAmount += (food.getPrice() * food.getAmount());
             }
         }
 
         return totalAmount;
     }
-
 }

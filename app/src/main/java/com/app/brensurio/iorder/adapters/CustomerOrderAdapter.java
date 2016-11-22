@@ -1,15 +1,18 @@
 package com.app.brensurio.iorder.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.brensurio.iorder.R;
+import com.app.brensurio.iorder.activities.OrderDetailActivity;
 import com.app.brensurio.iorder.models.Order;
 
 import java.util.List;
@@ -42,11 +45,13 @@ public class CustomerOrderAdapter extends
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         CardView cardView = holder.cardView;
 
         TextView refTextView = (TextView) cardView.findViewById(R.id.ref_text_view);
         refTextView.setText("Order ID: " + orders.get(position).getRefNo().substring(5, 11));
+        TextView dateTexView = (TextView) cardView.findViewById(R.id.date_text_view);
+        dateTexView.setText(orders.get(position).getDatetime());
         TextView statusTextView = (TextView) cardView.findViewById(R.id.status_text_view);
         statusTextView.setText(orders.get(position).getStatus());
 
@@ -64,6 +69,15 @@ public class CustomerOrderAdapter extends
                     context.getResources().getDrawable(R.drawable.ic_error_outline_black_24dp);
             statusIcon.setImageDrawable(myDrawable);
         }
+
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, OrderDetailActivity.class);
+                intent.putExtra("order", orders.get(holder.getAdapterPosition()));
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

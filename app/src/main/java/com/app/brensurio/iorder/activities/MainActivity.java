@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements MyFragmentCallbac
                             if (dataSnapshot.exists()) {
                                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                                     Map m = (Map) postSnapshot.getValue();
-                                    String eid = m.get("eid").toString().toLowerCase();
+                                    String eid = m.get("eid").toString();
                                     String email = m.get("email").toString();
                                     String name = m.get("firstName").toString() + " "
                                             + m.get("lastName").toString();

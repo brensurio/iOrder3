@@ -147,7 +147,7 @@ public class UploadFoodActivity extends AppCompatActivity {
                 // content-type, and download URL.
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
                 Food food = new Food(foodNameEditText.getText().toString(),
-                        foodPriceEditText.getText().toString(),
+                        Double.parseDouble(foodPriceEditText.getText().toString()),
                         foodDescEditText.getText().toString(),
                         downloadUrl.toString(),
                         storeName);

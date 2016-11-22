@@ -36,6 +36,7 @@
     <string name="log_out">Log out</string>
     <string name="orders">Orders</string>
     <string name="history_orders">History</string>
+    <string name="details">Details</string>
 
     <!--Customer cards-->
     <string name="add_to_cart">Add to cart</string>
@@ -55,5 +56,14 @@
     <string name="cash_payment">Cash Amount</string>
     <string name="items">Item(s)</string>
 
+    <!--Delete item from cart dialog-->
+    <string name="delete_message">Delete item?</string>
+    <string name="positive">Delete</string>
+    <string name="negative">Cancel</string>
 
+    <!--Place order dialog-->
+    <string name="title">Place your order?</string>
+    <string name="messsage">Once order is placed, it can\'t be cancelled.</string>
+    <string name="popositive">Proceed</string>
+    <string name="ponegative">Cancel</string>
 </resources>

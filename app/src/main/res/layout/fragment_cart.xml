@@ -11,12 +11,26 @@
         app:layout_behavior="@string/bottom_sheet_behavior"
         android:orientation="vertical">
 
-        <android.support.v7.widget.RecyclerView
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/customer_food_recycler"
-            android:layout_above="@+id/gridLayout"
-            android:layout_weight="1"/>
+            android:layout_weight="1">
+
+            <com.app.brensurio.iorder.ui.CustomRecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/customer_food_recycler"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:text="No item yet, let's go ahead and shop for food"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView4"
+                android:visibility="gone"
+                android:layout_centerInParent="true" />
+
+        </RelativeLayout>
 
         <GridLayout
             android:layout_width="match_parent"

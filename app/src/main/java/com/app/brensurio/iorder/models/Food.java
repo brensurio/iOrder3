@@ -12,7 +12,7 @@ import java.util.Objects;
 
 public class Food implements Parcelable {
     private String name;
-    private String price;
+    private double price;
     private String description;
     private String imageLink;
     private String store;
@@ -21,7 +21,7 @@ public class Food implements Parcelable {
     Food() { } // Default constructor required for calls to DataSnapshot.getValue(User.class)
 
 
-    public Food(String name, String price, String description, String imageLink, String store) {
+    public Food(String name, double price, String description, String imageLink, String store) {
         this.name = name;
         this.price = price;
         this.description = description;
@@ -54,11 +54,11 @@ public class Food implements Parcelable {
         this.name = name;
     }
 
-    public String getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -85,14 +85,18 @@ public class Food implements Parcelable {
 
         Food food = (Food) o;
 
-        if (!getName().equals(food.getName())) return false;
-        return getPrice().equals(food.getPrice());
+        if (Double.compare(food.getPrice(), getPrice()) != 0) return false;
+        return getName().equals(food.getName());
+
     }
 
     @Override
     public int hashCode() {
-        int result = getName().hashCode();
-        result = 31 * result + getPrice().hashCode();
+        int result;
+        long temp;
+        result = getName().hashCode();
+        temp = Double.doubleToLongBits(getPrice());
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
 
@@ -105,7 +109,7 @@ public class Food implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.name);
-        dest.writeString(this.price);
+        dest.writeDouble(this.price);
         dest.writeString(this.description);
         dest.writeString(this.imageLink);
         dest.writeString(this.store);
@@ -114,14 +118,14 @@ public class Food implements Parcelable {
 
     protected Food(Parcel in) {
         this.name = in.readString();
-        this.price = in.readString();
+        this.price = in.readDouble();
         this.description = in.readString();
         this.imageLink = in.readString();
         this.store = in.readString();
         this.amount = in.readInt();
     }
 
-    public static final Parcelable.Creator<Food> CREATOR = new Parcelable.Creator<Food>() {
+    public static final Creator<Food> CREATOR = new Creator<Food>() {
         @Override
         public Food createFromParcel(Parcel source) {
             return new Food(source);

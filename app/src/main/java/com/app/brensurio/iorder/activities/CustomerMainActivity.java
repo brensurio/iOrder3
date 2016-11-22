@@ -87,9 +87,6 @@ public class CustomerMainActivity extends AppCompatActivity
 
         getSupportFragmentManager().addOnBackStackChangedListener(
                 new FragmentManager.OnBackStackChangedListener() {
-                    /**
-                     * Called whenever the contents of the back stack change.
-                     */
                     @Override
                     public void onBackStackChanged() {
                         FragmentManager fragMan = getSupportFragmentManager();
@@ -201,7 +198,7 @@ public class CustomerMainActivity extends AppCompatActivity
             toolbar.setTitle("Your food cart");
         } else if (id == R.id.nav_orders) {
             fragment = new OrderFragment();
-            toolbar.setTitle("Orders");
+            toolbar.setTitle("Present Orders");
         } else if (id == R.id.nav_history) {
             fragment = new HistoryFragment();
             toolbar.setTitle("Past Orders");

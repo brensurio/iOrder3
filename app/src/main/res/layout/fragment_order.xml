@@ -5,9 +5,18 @@
     tools:context="com.app.brensurio.iorder.fragments.OrderFragment"
     android:background="#E0E0E0">
 
-    <android.support.v7.widget.RecyclerView
+    <com.app.brensurio.iorder.ui.CustomRecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/customer_order_recycler"/>
+
+    <TextView
+        android:text="No orders for now, make sure you eat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView6"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:visibility="gone" />
+
 
 </FrameLayout>

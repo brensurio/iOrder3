@@ -15,18 +15,15 @@ public class Order implements Parcelable {
     String refNo;
     String customerName;
     List<Food> items;
-    String amount;
+    double amount;
     String location;
     String status;
     String store;
     String datetime;
-    String payment;
-    String change;
-
 
     public Order() { }
 
-    public Order(String customerName, String refNo, List<Food> items, String amount,
+    public Order(String customerName, String refNo, List<Food> items, double amount,
                  String location, String status) {
         this.customerName = customerName;
         this.refNo = refNo;
@@ -36,11 +33,11 @@ public class Order implements Parcelable {
         this.status = status;
     }
 
-    public String getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
@@ -92,28 +89,12 @@ public class Order implements Parcelable {
         this.store = store;
     }
 
-    public String getChange() {
-        return change;
-    }
-
-    public void setChange(String change) {
-        this.change = change;
-    }
-
     public String getDatetime() {
         return datetime;
     }
 
     public void setDatetime(String datetime) {
         this.datetime = datetime;
-    }
-
-    public String getPayment() {
-        return payment;
-    }
-
-    public void setPayment(String payment) {
-        this.payment = payment;
     }
 
     @Override
@@ -130,7 +111,6 @@ public class Order implements Parcelable {
         return getRefNo().hashCode();
     }
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -138,29 +118,25 @@ public class Order implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.customerName);
         dest.writeString(this.refNo);
+        dest.writeString(this.customerName);
         dest.writeTypedList(this.items);
-        dest.writeString(this.amount);
+        dest.writeDouble(this.amount);
         dest.writeString(this.location);
         dest.writeString(this.status);
         dest.writeString(this.store);
         dest.writeString(this.datetime);
-        dest.writeString(this.payment);
-        dest.writeString(this.change);
     }
 
     protected Order(Parcel in) {
-        this.customerName = in.readString();
         this.refNo = in.readString();
+        this.customerName = in.readString();
         this.items = in.createTypedArrayList(Food.CREATOR);
-        this.amount = in.readString();
+        this.amount = in.readDouble();
         this.location = in.readString();
         this.status = in.readString();
         this.store = in.readString();
         this.datetime = in.readString();
-        this.payment = in.readString();
-        this.change = in.readString();
     }
 
     public static final Creator<Order> CREATOR = new Creator<Order>() {

@@ -1,5 +1,8 @@
 package com.app.brensurio.iorder.adapters;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,6 +24,7 @@ public class CustomerCartItemAdapter extends
 
     private List<Food> food;
     private Listener listener;
+    private Context context;
 
     public interface Listener {
         void onClickAddAmount(int position);
@@ -37,8 +41,9 @@ public class CustomerCartItemAdapter extends
         }
     }
 
-    public CustomerCartItemAdapter(List<Food> food) {
+    public CustomerCartItemAdapter(List<Food> food, Context context) {
         this.food = food;
+        this.context = context;
     }
 
     @Override
@@ -69,9 +74,27 @@ public class CustomerCartItemAdapter extends
             @Override
             public void onClick(View view) {
                 if (listener != null) {
-                    listener.onClickDeleteItem(position);
-                    notifyItemRemoved(position);
-                    notifyItemRangeChanged(position, getItemCount());
+                    AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+                    alertDialog.setMessage(context.getString(R.string.delete_message));
+                    alertDialog.setButton(DialogInterface.BUTTON_POSITIVE,
+                            context.getResources().getString(R.string.positive),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    listener.onClickDeleteItem(position);
+                                    notifyItemRemoved(position);
+                                    notifyItemRangeChanged(position, getItemCount());
+                                }
+                            });
+                    alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE,
+                            context.getString(R.string.negative),
+                            new DialogInterface.OnClickListener(){
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.cancel();
+                                }
+                            });
+                    alertDialog.show();
                 }
             }
         });

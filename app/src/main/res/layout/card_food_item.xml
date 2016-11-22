@@ -13,16 +13,17 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:text="TextView"
+            android:text="Binagoongang Baboy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/food_name_text_view"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_marginTop="24dp"
             android:layout_marginLeft="16dp"
-            android:textColor="@android:color/background_dark" />
+            android:textColor="@android:color/background_dark"
+            android:ems="8" />
 
         <TextView
             android:text="TextView"

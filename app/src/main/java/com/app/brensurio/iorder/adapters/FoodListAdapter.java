@@ -50,7 +50,7 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.ViewHo
         foodNameTextView.setText(food.get(position).getName());
 
         TextView foodPriceTextView = (TextView) cardView.findViewById(R.id.food_price_text_view);
-        foodPriceTextView.setText(food.get(position).getPrice());
+        foodPriceTextView.setText(Double.toString(food.get(position).getPrice()));
 
         TextView foodDescTextView = (TextView) cardView.findViewById(R.id.food_desc_text_view);
         foodDescTextView.setText(food.get(position).getDescription());
