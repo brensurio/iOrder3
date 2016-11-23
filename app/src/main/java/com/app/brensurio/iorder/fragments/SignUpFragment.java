@@ -2,11 +2,13 @@ package com.app.brensurio.iorder.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -230,26 +232,63 @@ public class SignUpFragment extends Fragment {
             focusView.requestFocus();
         } else {
             if (doesPasswordMatch()) {
-                Query eidQuery = mDatabase.child("eidlist").orderByChild("eid")
-                        .equalTo(eidEditText.getText().toString().toUpperCase());
-                eidQuery.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            callback.signUp(emailEditText.getText().toString(),
-                                    passwordEditText.getText().toString());
-                            User user = new User(nameEditText.getText().toString(),
-                                    surnameEditText.getText().toString(),
-                                    eidEditText.getText().toString().toLowerCase(),
-                                    emailEditText.getText().toString());
-                            mDatabase.child("users").push().setValue(user);
-                        } else {
+                AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                alertDialog.setTitle(getActivity().getString(R.string.sutitle));
+                alertDialog.setMessage(getActivity().getString(R.string.sumessage));
+                alertDialog.setButton(DialogInterface.BUTTON_POSITIVE,
+                        getActivity().getResources().getString(R.string.popositive),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                callback.loading();
+                                Query eidQuery = mDatabase.child("eidlist").orderByChild("eid")
+                                        .equalTo(eidEditText.getText().toString().toUpperCase());
+                                eidQuery.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if (dataSnapshot.exists()) {
+                                            Query eidQuery2 = mDatabase.child("users").orderByChild("eid")
+                                                    .equalTo(eidEditText.getText().toString());
+                                            eidQuery2.addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    if (!dataSnapshot.exists()) {
+                                                        User user = new User(nameEditText.getText().toString(),
+                                                            surnameEditText.getText().toString(),
+                                                            eidEditText.getText().toString(),
+                                                            emailEditText.getText().toString());
 
-                        }
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) { }
-                });
+                                                        callback.signUp(emailEditText.getText()
+                                                                                .toString(),
+                                                                passwordEditText.getText()
+                                                                        .toString(), user);
+                                                    } else {
+                                                        callback.unload();
+                                                        Toast.makeText(getActivity(),
+                                                                "Employee ID in use",
+                                                                Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {}
+                                            });
+                                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) { }
+                                });
+                            }
+                        });
+                alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE,
+                        getActivity().getString(R.string.ponegative),
+                        new DialogInterface.OnClickListener(){
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+                            }
+                        });
+                alertDialog.show();
             } else {
                 pwConfirmTextInputLayout.setError(getString(R.string.pw_do_not_match_text));
             }

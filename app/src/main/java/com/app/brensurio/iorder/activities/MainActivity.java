@@ -21,7 +21,9 @@ import com.app.brensurio.iorder.interfaces.MyFragmentCallback;
 import com.app.brensurio.iorder.R;
 import com.app.brensurio.iorder.fragments.MainFragment;
 import com.app.brensurio.iorder.fragments.SignUpFragment;
+import com.app.brensurio.iorder.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -149,22 +151,23 @@ public class MainActivity extends AppCompatActivity implements MyFragmentCallbac
     }
 
     @Override
-    public void signUp(String email, String password) {
+    public void signUp(String email, String password, final User user) {
         loading();
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        mDatabase.child("users").push().setValue(user);
                         Toast.makeText(MainActivity.this, "Account created!",
                                 Toast.LENGTH_SHORT).show();
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            unload();
-                            Toast.makeText(MainActivity.this, "Sign up failed",
-                                    Toast.LENGTH_SHORT).show();
-                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        unload();
+                        Toast.makeText(MainActivity.this, e.getMessage(),
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -176,36 +179,42 @@ public class MainActivity extends AppCompatActivity implements MyFragmentCallbac
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
+                        if (task.isSuccessful()) {
                             unload();
-                            Toast.makeText(MainActivity.this, "Failed!",
+                            Toast.makeText(MainActivity.this, "Success!",
                                     Toast.LENGTH_SHORT).show();
                         }
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        unload();
+                        Toast.makeText(MainActivity.this, e.getMessage(),
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    private void loading() {
+    @Override
+    public void loading() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         linearLayout.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
     }
 
-    private void unload() {
+    @Override
+    public void unload() {
         linearLayout.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
+    public TabLayout getTabLayout() {
+        return  tabLayout;
+    }
+
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         SectionsPagerAdapter(FragmentManager fm) {
@@ -242,7 +251,5 @@ public class MainActivity extends AppCompatActivity implements MyFragmentCallbac
         }
     }
 
-    public TabLayout getTabLayout() {
-        return  tabLayout;
-    }
+
 }
