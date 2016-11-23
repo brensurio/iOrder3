@@ -240,19 +240,39 @@ public class SignUpFragment extends Fragment {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                callback.loading();
                                 Query eidQuery = mDatabase.child("eidlist").orderByChild("eid")
                                         .equalTo(eidEditText.getText().toString().toUpperCase());
                                 eidQuery.addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         if (dataSnapshot.exists()) {
-                                            callback.signUp(emailEditText.getText().toString(),
-                                                    passwordEditText.getText().toString());
-                                            User user = new User(nameEditText.getText().toString(),
-                                                    surnameEditText.getText().toString(),
-                                                    eidEditText.getText().toString().toLowerCase(),
-                                                    emailEditText.getText().toString());
-                                            mDatabase.child("users").push().setValue(user);
+                                            Query eidQuery2 = mDatabase.child("users").orderByChild("eid")
+                                                    .equalTo(eidEditText.getText().toString());
+                                            eidQuery2.addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    if (!dataSnapshot.exists()) {
+                                                        User user = new User(nameEditText.getText().toString(),
+                                                            surnameEditText.getText().toString(),
+                                                            eidEditText.getText().toString(),
+                                                            emailEditText.getText().toString());
+
+                                                        callback.signUp(emailEditText.getText()
+                                                                                .toString(),
+                                                                passwordEditText.getText()
+                                                                        .toString(), user);
+                                                    } else {
+                                                        callback.unload();
+                                                        Toast.makeText(getActivity(),
+                                                                "Employee ID in use",
+                                                                Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {}
+                                            });
                                         }
                                     }
                                     @Override

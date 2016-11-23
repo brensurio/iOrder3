@@ -36,7 +36,8 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             app:tabIndicatorHeight="3dp"
-            android:layout_marginTop="56dp" />
+            android:layout_marginTop="56dp"
+            app:tabIndicatorColor="#D500F9" />
 
     </android.support.design.widget.AppBarLayout>
 
