@@ -49,7 +49,8 @@ public class CustomerOrderAdapter extends
         CardView cardView = holder.cardView;
 
         TextView refTextView = (TextView) cardView.findViewById(R.id.ref_text_view);
-        refTextView.setText("Order ID: " + orders.get(position).getRefNo().substring(6, 12));
+        refTextView.setText("Order ID: " +
+                orders.get(position).getRefNo().substring(6, 12).toUpperCase());
         TextView dateTexView = (TextView) cardView.findViewById(R.id.date_text_view);
         dateTexView.setText(orders.get(position).getDatetime());
         TextView statusTextView = (TextView) cardView.findViewById(R.id.status_text_view);

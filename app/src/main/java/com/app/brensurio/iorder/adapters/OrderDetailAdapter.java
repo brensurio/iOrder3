@@ -1,11 +1,15 @@
 package com.app.brensurio.iorder.adapters;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.app.brensurio.iorder.R;
 import com.app.brensurio.iorder.models.Food;
 
@@ -39,6 +43,13 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         LinearLayout view = holder.view;
+
+        ColorGenerator generator = ColorGenerator.MATERIAL;
+        TextDrawable drawable = TextDrawable.builder()
+                .buildRound(Character.toString(orderList.get(position).getName().charAt(0)),
+                        generator.getRandomColor());
+        ImageView imageView = (ImageView) view.findViewById(R.id.imageView9);
+        imageView.setImageDrawable(drawable);
 
         TextView nameTextView = (TextView) view.findViewById(R.id.name_text_view);
         nameTextView.setText(orderList.get(position).getName());

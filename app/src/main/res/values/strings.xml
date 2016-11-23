@@ -71,4 +71,12 @@
     <string name="sutitle">Sign up?</string>
     <string name="sumessage">Check details. Incorrect detail will immediately null sign up</string>
 
+    <!--Order Detail-->
+    <string name="order_date">Order Date</string>
+    <string name="order_id">Order ID</string>
+    <string name="delivery_place">Delivery Place</string>
+    <string name="total_price">Total Price</string>
+    <string name="store">Store</string>
+    <string name="string">Status</string>
+
 </resources>

@@ -79,7 +79,6 @@ public class SellerOrderFragment extends Fragment {
                 sellerOrderAdapter.setListener(new SellerOrderAdapter.Listener() {
                     @Override
                     public void onViewOrder(int position) {
-
                         // total | date | refno | location | subtotal1 | foodname1 | quantity1 | subtotalN | foodnameN | quantityN
                         String data;
 
