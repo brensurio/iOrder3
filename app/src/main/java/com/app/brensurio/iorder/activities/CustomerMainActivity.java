@@ -45,7 +45,6 @@ public class CustomerMainActivity extends AppCompatActivity
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private ArrayList<Food> orderList;
-    private int currentPosition = 0;
     private String customerName;
     private Toolbar toolbar;
     private ProgressBar progressBar;
@@ -85,24 +84,6 @@ public class CustomerMainActivity extends AppCompatActivity
         TextView emailTextView = (TextView) headerLayout.findViewById(R.id.customer_email_text_view);
         emailTextView.setText(getIntent().getStringExtra("EMAIL"));
 
-        getSupportFragmentManager().addOnBackStackChangedListener(
-                new FragmentManager.OnBackStackChangedListener() {
-                    @Override
-                    public void onBackStackChanged() {
-                        FragmentManager fragMan = getSupportFragmentManager();
-                        Fragment fragment = fragMan.findFragmentByTag("visible_fragment");
-                        if (fragment instanceof StoreFragment) {
-                            currentPosition = 0;
-                        }
-                        if (fragment instanceof CartFragment) {
-                            currentPosition = 1;
-                        }
-                        if (fragment instanceof OrderFragment) {
-                            currentPosition = 2;
-                        }
-                    }
-                }
-        );
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -187,7 +168,6 @@ public class CustomerMainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        currentPosition = id;
         Fragment fragment = new StoreFragment();
 
         if (id == R.id.nav_shop_now) {

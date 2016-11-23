@@ -1,51 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="wrap_content"
     android:padding="8dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/name_text_view"
-        android:layout_weight="1"
-        android:layout_gravity="center_vertical"
-        android:maxLines="2"
-        android:ems="5"
-        android:text="Binagoongang Baboy"
-        android:textSize="14sp" />
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:srcCompat="@mipmap/ic_launcher"
+        android:id="@+id/imageView9"
+        android:layout_weight="0" />
 
-    <TextView
-        android:text="unitPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/unit_price_text_view"
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:layout_gravity="center_vertical"
-        android:ems="5"
-        android:textAlignment="center"
-        android:textSize="14sp" />
+        android:layout_marginLeft="8dp">
 
-    <TextView
-        android:text="quantity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/quantity_text_view"
-        android:layout_weight="1"
-        android:layout_gravity="center_vertical"
-        android:ems="5"
-        android:textAlignment="center"
-        android:textSize="14sp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/name_text_view"
+            android:layout_weight="0"
+            android:layout_gravity="center_vertical"
+            android:maxLines="2"
+            android:text="Binagoongang Baboy"
+            android:textSize="14sp" />
 
-    <TextView
-        android:text="totalAmount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/total_price_text_view"
-        android:layout_weight="1"
-        android:layout_gravity="center_vertical"
-        android:ems="5"
-        android:textAlignment="center"
-        android:textSize="14sp" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:text="unitPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/unit_price_text_view"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:ems="5"
+                android:textAlignment="textStart"
+                android:textSize="14sp" />
+
+            <TextView
+                android:text="quantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/quantity_text_view"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:ems="5"
+                android:textAlignment="textStart"
+                android:textSize="14sp" />
+
+            <TextView
+                android:text="totalAmount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/total_price_text_view"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:ems="5"
+                android:textAlignment="textStart"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </LinearLayout>
