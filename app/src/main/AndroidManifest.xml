@@ -49,7 +49,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.CustomerMainActivity" />
         </activity>
-
         <activity
             android:name=".activities.OrderDetailActivity"
             android:parentActivityName=".activities.CustomerMainActivity">
@@ -57,10 +56,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.CustomerMainActivity" />
         </activity>
-
-        <activity android:name=".activities.AccountDetailActivity">
-
-        </activity>
+        <activity android:name=".activities.AccountDetailActivity"></activity>
+        <activity android:name=".activities.SellerOrderDetailActivity"></activity>
     </application>
 
 </manifest>
