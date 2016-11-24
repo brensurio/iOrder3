@@ -82,24 +82,31 @@ public class SellerOrderFragment extends Fragment {
                         // total | date | refno | location | subtotal1 | foodname1 | quantity1 | subtotalN | foodnameN | quantityN
                         String data;
 
+
+                        String[] name =
+                                orderList.get(position).getCustomerName().split("\\s+");
+                        int last = name.length - 1;
+
                         String total = Double.toString(orderList.get(position).getAmount());
                         String date = orderList.get(position).getDatetime().substring(0, 17);
                         Toast.makeText(getActivity(), date, Toast.LENGTH_SHORT).show();
                         String refNo = orderList.get(position).getRefNo().substring(6, 12);
                         String location = orderList.get(position).getLocation();
 
-                        data = total + "|" + date + "|" + refNo + "|" + location + "|";
+                        data = name[0] + "|" + name[last] + "|" + total + "|" + date + "|" + refNo + "|" + location + "|";
 
                         for (Food food : orderList.get(position).getItems()) {
                             String subtotal;
+                            String price;
                             String foodname;
                             String quantity;
 
                             subtotal = Double.toString(food.getPrice() * food.getAmount());
-                            foodname = food.getName().substring(0, 3);
+                            price = Double.toString(food.getPrice());
+                            foodname = food.getName();
                             quantity = Integer.toString(food.getAmount());
 
-                            data += subtotal + "|" + foodname + "|" + quantity + "|";
+                            data += subtotal + "|" + price + "|" + quantity + "|" + foodname + "|";
                         }
                         sellerFragmentListener.setString(data);
                         sellerFragmentListener.transmitData();

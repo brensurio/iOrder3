@@ -64,8 +64,7 @@ public class SellerMainActivity extends AppCompatActivity
 
         mAuth = FirebaseAuth.getInstance();
         btAdapter = BluetoothAdapter.getDefaultAdapter();
-        Intent intent = getIntent();
-        storeName = intent.getStringExtra(STORE_NAME);
+        storeName = getIntent().getStringExtra(STORE_NAME);
 
         if (storeName.equalsIgnoreCase("store1"))
             address = "20:15:04:15:15:60"; // Scoops
@@ -126,6 +125,7 @@ public class SellerMainActivity extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
+
         Log.d("onRESUME", "...onResume - try connect...");
         BluetoothDevice device = btAdapter.getRemoteDevice(address);
         try{
@@ -246,9 +246,6 @@ public class SellerMainActivity extends AppCompatActivity
         return this.storeName;
     }
 
-
-
-
     private BluetoothSocket createBluetoothSocket(BluetoothDevice device) throws IOException {
         if(Build.VERSION.SDK_INT >= 10){
             try {
@@ -260,8 +257,6 @@ public class SellerMainActivity extends AppCompatActivity
         }
         return  device.createRfcommSocketToServiceRecord(MY_UUID);
     }
-
-
 
     private void checkBTState() {
         if(btAdapter==null){
