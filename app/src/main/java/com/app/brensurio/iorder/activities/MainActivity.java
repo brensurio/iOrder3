@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements MyFragmentCallbac
                                                     MainActivity.STORE_3);
                                         //loading();
                                         intent.putExtra("NAME", name);
-                                        intent.putExtra("EMAIL", email);
+                                        intent.putExtra("EMAIL", email); //
                                         startActivity(intent);
                                         finish();
                                     } else if (eid.substring(0, 1).equalsIgnoreCase("f")) {

@@ -10,6 +10,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.app.brensurio.iorder.R;
@@ -28,6 +30,7 @@ import java.util.UUID;
 
 public class SellerOrderDetailActivity extends AppCompatActivity {
 
+    private static final String TAG = "";
     private String storeName;
     private Order order;
 
@@ -38,9 +41,7 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
     private BluetoothSocket btSocket = null;
     private OutputStream outputStream = null;
     public static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-    public String address = "20:15:04:15:15:60";
-
-    boolean proceed = false;
+    private String address = "20:15:04:15:15:60";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,16 +52,21 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Order details");
 
         btAdapter = BluetoothAdapter.getDefaultAdapter();
-        checkBTState();
-
         Intent intent = getIntent();
+
         storeName = intent.getStringExtra("STORE_NAME");
+        Toast.makeText(this, storeName, Toast.LENGTH_SHORT).show();
+        Log.d(TAG, storeName);
+
         if (storeName.equalsIgnoreCase("store1"))
             address = "20:15:04:15:15:60"; // Scoops
         else if (storeName.equalsIgnoreCase("store2"))
             address = "20:15:04:16:10:78";
         else if (storeName.equalsIgnoreCase("store3"))
             address = "20:15:04:16:10:93"; // ovenmade
+
+        Toast.makeText(this, address, Toast.LENGTH_SHORT).show();
+        Log.d(TAG, address);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -73,24 +79,17 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
         ft.replace(R.id.placeholder, fragment, "visible_fragment");
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.commit();
+
+        Button printButton = (Button) findViewById(R.id.print_button);
+        printButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                print();
+            }
+        });
     }
 
-    /**
-     * Dispatch incoming result to the correct fragment.
-     *
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == RESULT_OK) {
-            proceed = true;
-        }
-    }
-
-   /* @Override
     public void onResume() {
         super.onResume();
         Log.d("onRESUME", "...onResume - try connect...");
@@ -105,19 +104,17 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
         try {
             btSocket.connect();
             Log.d("CONNECTION OK:", "...Connection ok...");
-        }catch (IOException e) {
+        } catch (IOException e) {
             try {
                 btSocket.close();
             } catch (IOException e2) {
                 errorExit("Fatal Error", "In onResume() and unable to close socket during connection failure" + e2.getMessage() + ".");
             }
         }
-
         Log.d("CREATING SOCKET:", "...Create Socket...");
-
-        try{
+        try {
             outputStream = btSocket.getOutputStream();
-        }catch (IOException e) {
+        } catch (IOException e) {
             errorExit("Fatal Error", "In onResume() and output stream creation failed:" + e.getMessage() + ".");
         }
     }
@@ -138,7 +135,7 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
         } catch (IOException e2) {
             errorExit("Fatal Error", "In onPause() and failed to close socket." + e2.getMessage() + ".");
         }
-    }*/
+    }
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -150,7 +147,7 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
         if(Build.VERSION.SDK_INT >= 10){
             try {
                 final Method m = device.getClass().getMethod("createInsecureRfcommSocketToServiceRecord",
-                        UUID.class);
+                        new Class[] { UUID.class });
                 return (BluetoothSocket) m.invoke(device, MY_UUID);
             } catch (Exception e) {
                 Log.e("ERROR", "Could not create Insecure RFComm Connection",e);
@@ -165,6 +162,7 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
         } else {
             if (btAdapter.isEnabled()) {
                 Log.d("BT IS ON:", "...Bluetooth ON...");
+                print();
             } else {
                 //Prompt user to turn on Bluetooth
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -177,18 +175,6 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
         Toast.makeText(getBaseContext(), title + " - " + message, Toast.LENGTH_LONG).show();
     }
 
-    private void transmitData(String data) {
-        try {
-            outputStream.write(data.getBytes());
-        } catch (IOException e) {
-            String msg = "In onResume() and an exception occurred during write: " + e.getMessage();
-            if (address.equals("00:00:00:00:00:00"))
-                msg = msg + ".\n\nUpdate your server address from 00:00:00:00:00:00 to the correct address on line 35 in the java code";
-            msg = msg +  ".\n\nCheck that the SPP UUID: " + MY_UUID.toString() + " exists on server.\n\n";
-            errorExit("Fatal Error", msg);
-        }
-    }
-
     private void print() {
         // total | date | refno | location | subtotal1 | foodname1 | quantity1 | subtotalN | foodnameN | quantityN
         String data;
@@ -197,32 +183,39 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
         int last = name.length - 1;
         String total = Double.toString(order.getAmount());
         String date = order.getDatetime().substring(0, 17);
-        String refNo = order.getRefNo().substring(6, 12);
+        String refNo = order.getRefNo().substring(6, 12).toString();
         String location = order.getLocation();
 
         data = name[0] + "|" + name[last] + "|" + total + "|" + date + "|" + refNo + "|" + location + "|";
 
         for (Food food : order.getItems()) {
-            String subtotal;
-            String price;
-            String foodname;
-            String quantity;
-
+            String subtotal, price, foodname, quantity;
             subtotal = Double.toString(food.getPrice() * food.getAmount());
             price = Double.toString(food.getPrice());
             foodname = food.getName();
             quantity = Integer.toString(food.getAmount());
-
             data += subtotal + "|" + price + "|" + quantity + "|" + foodname + "|";
         }
 
-        transmitData(data);
-
-        DatabaseReference databaseReference =
-                mDatabase.child("storeorders")
-                        .child(order.getRefNo());
-        Map<String, Object> statusUpdate = new HashMap<>();
-        statusUpdate.put("status", "CONFIRMED");
-        databaseReference.updateChildren(statusUpdate);
+        boolean success = false;
+        try {
+            outputStream.write(data.getBytes());
+            success = true;
+        } catch (IOException e) {
+            String msg = "In onResume() and an exception occurred during write: " + e.getMessage();
+            if (address.equals("00:00:00:00:00:00"))
+                msg = msg + ".\n\nUpdate your server address from 00:00:00:00:00:00 to the correct address on line 35 in the java code";
+            msg = msg +  ".\n\nCheck that the SPP UUID: " + MY_UUID.toString() + " exists on server.\n\n";
+            errorExit("Fatal Error", msg);
+        } finally {
+            if (success) {
+                DatabaseReference databaseReference =
+                        mDatabase.child("storeorders")
+                                .child(order.getRefNo());
+                Map<String, Object> statusUpdate = new HashMap<>();
+                statusUpdate.put("status", "CONFIRMED");
+                databaseReference.updateChildren(statusUpdate);
+            }
+        }
     }
 }

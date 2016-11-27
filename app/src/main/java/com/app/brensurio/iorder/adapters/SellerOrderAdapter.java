@@ -84,6 +84,7 @@ public class SellerOrderAdapter extends
         viewOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Intent intent = new Intent(context, SellerOrderDetailActivity.class);
                 intent.putExtra("order", orders.get(holder.getAdapterPosition()));
                 intent.putExtra("STORE_NAME", orders.get(holder.getAdapterPosition()).getStore());
