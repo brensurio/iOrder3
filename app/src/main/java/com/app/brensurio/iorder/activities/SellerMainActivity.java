@@ -1,18 +1,12 @@
 package com.app.brensurio.iorder.activities;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -20,25 +14,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.app.brensurio.iorder.R;
-import com.app.brensurio.iorder.fragments.CartFragment;
-import com.app.brensurio.iorder.fragments.HistoryFragment;
-import com.app.brensurio.iorder.fragments.OrderFragment;
 import com.app.brensurio.iorder.fragments.SellerFoodListFragment;
 import com.app.brensurio.iorder.fragments.SellerHistoryFragment;
 import com.app.brensurio.iorder.fragments.SellerOrderFragment;
-import com.app.brensurio.iorder.fragments.StoreFragment;
 import com.app.brensurio.iorder.interfaces.SellerFragmentListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.reflect.Method;
-import java.util.UUID;
 
 public class SellerMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SellerFragmentListener {
@@ -48,14 +33,7 @@ public class SellerMainActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener mAuthListener;
     private String storeName;
 
-    // Bluetooth variables
-    private BluetoothAdapter btAdapter = null;
-    private BluetoothSocket btSocket = null;
-    private OutputStream outputStream = null;
-    public static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-    public String address = "20:15:04:15:15:60";
-
-    private String toPrinter;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,20 +41,9 @@ public class SellerMainActivity extends AppCompatActivity
         setContentView(R.layout.activity_seller_main);
 
         mAuth = FirebaseAuth.getInstance();
-        btAdapter = BluetoothAdapter.getDefaultAdapter();
-        Intent intent = getIntent();
-        storeName = intent.getStringExtra(STORE_NAME);
+        storeName = getIntent().getStringExtra(STORE_NAME);
 
-        if (storeName.equalsIgnoreCase("store1"))
-            address = "20:15:04:15:15:60"; // Scoops
-        else if (storeName.equalsIgnoreCase("store2"))
-            address = "20:15:04:16:10:78";
-        else if (storeName.equalsIgnoreCase("store3"))
-            address = "20:15:04:16:10:93"; // ovenmade
-
-        toPrinter = "";
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -98,20 +65,23 @@ public class SellerMainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().performIdentifierAction(R.id.nav_orders, 0);
+
         View header = navigationView.getHeaderView(0);
         TextView usernameTextView = (TextView) header.findViewById(R.id.username_text_view);
+        usernameTextView.setText(getIntent().getStringExtra("NAME"));
         TextView emailTextView = (TextView) header.findViewById(R.id.user_email_textview);
+        emailTextView.setText(getIntent().getStringExtra("EMAIL"));
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-
-                } else {
-                    finish();
+                if (user != null) { }
+                else {
                     Intent intent = new Intent(SellerMainActivity.this, MainActivity.class);
                     startActivity(intent);
+                    finish();
                 }
             }
         };
@@ -124,61 +94,16 @@ public class SellerMainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        Log.d("onRESUME", "...onResume - try connect...");
-        BluetoothDevice device = btAdapter.getRemoteDevice(address);
-        try{
-            btSocket = createBluetoothSocket(device);
-        }catch (IOException e1) {
-            errorExit("Fatal Error", "In onResume() and socket create failed: " + e1.getMessage() + ".");
-        }
-        btAdapter.cancelDiscovery();
-        Log.d("CONNECTING:", "...Connecting...");
-        try {
-            btSocket.connect();
-            Log.d("CONNECTION OK:", "...Connection ok...");
-        }catch (IOException e) {
-            try {
-                btSocket.close();
-            } catch (IOException e2) {
-                errorExit("Fatal Error", "In onResume() and unable to close socket during connection failure" + e2.getMessage() + ".");
-            }
-        }
-
-        Log.d("CREATING SOCKET:", "...Create Socket...");
-
-        try{
-            outputStream = btSocket.getOutputStream();
-        }catch (IOException e) {
-            errorExit("Fatal Error", "In onResume() and output stream creation failed:" + e.getMessage() + ".");
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d("ON PAUSE:", "...In onPause()...");
-        if (outputStream != null) {
-            try {
-                outputStream.flush();
-            } catch (IOException e) {
-                errorExit("Fatal Error", "In onPause() and failed to flush output stream: " + e.getMessage() + ".");
-            }
-        }
-        try     {
-            btSocket.close();
-        } catch (IOException e2) {
-            errorExit("Fatal Error", "In onPause() and failed to close socket." + e2.getMessage() + ".");
-        }
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -200,22 +125,16 @@ public class SellerMainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -223,10 +142,13 @@ public class SellerMainActivity extends AppCompatActivity
 
         if (id == R.id.nav_orders) {
             fragment = new SellerOrderFragment();
+            toolbar.setTitle("Present Orders");
         } else if (id == R.id.nav_gallery) {
             fragment = new SellerFoodListFragment();
+            toolbar.setTitle("Food menu");
         } else if (id == R.id.nav_history) {
             fragment = new SellerHistoryFragment();
+            toolbar.setTitle("History");
         } else if (id == R.id.nav_log_out) {
             FirebaseAuth.getInstance().signOut();
         }
@@ -243,60 +165,6 @@ public class SellerMainActivity extends AppCompatActivity
 
     @Override
     public String getStoreName() {
-        return this.storeName;
-    }
-
-
-
-
-    private BluetoothSocket createBluetoothSocket(BluetoothDevice device) throws IOException {
-        if(Build.VERSION.SDK_INT >= 10){
-            try {
-                final Method m = device.getClass().getMethod("createInsecureRfcommSocketToServiceRecord", new Class[] { UUID.class });
-                return (BluetoothSocket) m.invoke(device, MY_UUID);
-            } catch (Exception e) {
-                Log.e("ERROR", "Could not create Insecure RFComm Connection",e);
-            }
-        }
-        return  device.createRfcommSocketToServiceRecord(MY_UUID);
-    }
-
-
-
-    private void checkBTState() {
-        if(btAdapter==null){
-            errorExit("Fatal Error", "Bluetooth not support");
-        } else {
-            if (btAdapter.isEnabled()) {
-                Log.d("BT IS ON:", "...Bluetooth ON...");
-            } else {
-                //Prompt user to turn on Bluetooth
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, 1);
-            }
-        }
-    }
-
-    private void errorExit(String title, String message){
-        Toast.makeText(getBaseContext(), title + " - " + message, Toast.LENGTH_LONG).show();
-        finish();
-    }
-
-    @Override
-    public void setString(String s) {
-        this.toPrinter = s;
-    }
-
-    @Override
-    public void transmitData() {
-        try {
-            outputStream.write(toPrinter.getBytes());
-        } catch (IOException e) {
-            String msg = "In onResume() and an exception occurred during write: " + e.getMessage();
-            if (address.equals("00:00:00:00:00:00"))
-                msg = msg + ".\n\nUpdate your server address from 00:00:00:00:00:00 to the correct address on line 35 in the java code";
-            msg = msg +  ".\n\nCheck that the SPP UUID: " + MY_UUID.toString() + " exists on server.\n\n";
-            errorExit("Fatal Error", msg);
-        }
+        return storeName;
     }
 }

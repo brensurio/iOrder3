@@ -6,77 +6,79 @@
     android:layout_width="match_parent"
     card_view:cardCornerRadius="2dp"
     android:layout_margin="5dp"
-    android:layout_height="96dp">
+    android:layout_height="wrap_content">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:id="@+id/start">
+            android:id="@+id/start"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true">
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/date_text_view"
+                android:layout_below="@+id/start"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_margin="8dp" />
 
             <TextView
                 android:text="TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/ref_text_view"
-                android:layout_centerVertical="true"
-                android:layout_alignParentLeft="true" />
-
-            <TextView
-                android:text="TextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/status_text_view"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@+id/status_icon"
-                android:layout_marginRight="8dp" />
+                android:layout_below="@+id/date_text_view"
+                android:layout_alignStart="@+id/date_text_view"
+                android:layout_margin="8dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="false" />
 
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="23dp"
                 app:srcCompat="@mipmap/ic_launcher"
                 android:id="@+id/status_icon"
-                android:layout_alignBottom="@+id/ref_text_view"
-                android:layout_alignParentRight="true"
+                android:adjustViewBounds="true"
+                android:layout_centerInParent="false"
                 android:layout_centerVertical="true"
-                android:adjustViewBounds="true" />
+                android:layout_alignParentEnd="true"
+                android:layout_margin="16dp" />
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/status_text_view"
+                android:layout_marginRight="8dp"
+                android:layout_alignBottom="@+id/status_icon"
+                android:layout_toStartOf="@+id/status_icon"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true" />
 
         </RelativeLayout>
-
-        <View
-            android:id="@+id/SplitLine_hor1"
-            android:layout_width="match_parent"
-            android:layout_height= "2dp"
-            android:background="#757575"
-            android:layout_below="@+id/start" />
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentStart="false"
-            android:layout_alignParentBottom="true">
+            android:layout_below="@+id/start"
+            android:layout_alignParentStart="true">
 
             <Button
-                android:text="confirm"
+                android:text="VIEW DETAILS"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/view_order"
                 android:layout_weight="1"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:textColor="@color/colorAccent" />
-
-            <View
-                android:id="@+id/SplitLine_vertl"
-                android:layout_width="2dp"
-                android:layout_height= "match_parent"
-                android:background="#757575"
-                android:layout_below="@+id/start" />
 
             <Button
                 android:text="@android:string/cancel"
