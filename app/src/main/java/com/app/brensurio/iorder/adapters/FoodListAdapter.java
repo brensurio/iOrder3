@@ -58,6 +58,9 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.ViewHo
         ImageView foodImageView = (ImageView) cardView.findViewById(R.id.food_image_view);
         Picasso.with(foodImageView.getContext()).load(food.get(position).getImageLink())
                 .into(foodImageView);
+
+
+
     }
 
     @Override

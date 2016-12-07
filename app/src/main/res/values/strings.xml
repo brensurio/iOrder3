@@ -79,4 +79,10 @@
     <string name="store">Store</string>
     <string name="string">Status</string>
 
+    <!--Seller order details-->
+    <string name="confirm">Confirm</string>
+
+    <!--Card new seller food item-->
+    <string name="update">Update</string>
+
 </resources>

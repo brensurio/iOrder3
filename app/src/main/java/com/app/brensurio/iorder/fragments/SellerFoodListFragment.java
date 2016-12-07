@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.app.brensurio.iorder.adapters.NewSellerFoodItemAdapter;
 import com.app.brensurio.iorder.interfaces.SellerFragmentListener;
 import com.app.brensurio.iorder.models.Food;
 import com.app.brensurio.iorder.adapters.FoodListAdapter;
@@ -62,17 +63,25 @@ public class SellerFoodListFragment extends Fragment {
                     Food food = singleSnapshot.getValue(Food.class);
                     foodList.add(food);
                 }
-                FoodListAdapter foodListAdapter = new FoodListAdapter(foodList);
+                NewSellerFoodItemAdapter foodListAdapter = new NewSellerFoodItemAdapter(foodList);
                 LinearLayoutManager linearLayoutManager =
                         new LinearLayoutManager(getActivity());
+
+                foodListAdapter.setListener(new NewSellerFoodItemAdapter.Listener() {
+                    @Override
+                    public void onUpdate(int position) {
+ 
+                    }
+                    @Override
+                    public void onAvailable(int position) {
+
+                    }
+                });
                 foodRecycler.setLayoutManager(linearLayoutManager);
                 foodRecycler.setAdapter(foodListAdapter);
             }
-
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
 
         return foodRecycler;

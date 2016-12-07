@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.app.brensurio.iorder.R;
+import com.app.brensurio.iorder.SellerService;
 import com.app.brensurio.iorder.fragments.SellerFoodListFragment;
 import com.app.brensurio.iorder.fragments.SellerHistoryFragment;
 import com.app.brensurio.iorder.fragments.SellerOrderFragment;
@@ -40,11 +41,14 @@ public class SellerMainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seller_main);
 
-        mAuth = FirebaseAuth.getInstance();
-        storeName = getIntent().getStringExtra(STORE_NAME);
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mAuth = FirebaseAuth.getInstance();
+        storeName = getIntent().getStringExtra(STORE_NAME);
+        Intent intent = new Intent(getBaseContext(), SellerService.class);
+        intent.putExtra("storeName", storeName);
+        startService(intent);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
