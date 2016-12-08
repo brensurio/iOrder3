@@ -48,11 +48,12 @@
 
     <!--Seller drawer menu-->
     <string name="food_gallery">Food Gallery</string>
+    <string name="print_history">Print History</string>
     <string name="_0_00">0.00</string>
 
     <!--Checkout-->
     <string name="place_order">Place Order</string>
-    <string name="place">Place, cash, notes, etc.</string>
+    <string name="place">Place,cash</string>
     <string name="cash_payment">Notes: </string>
     <string name="items">Item(s)</string>
 

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -135,34 +136,48 @@ public class UploadFoodActivity extends AppCompatActivity {
     }
 
     private void upload() {
-        storageRef = storage.getReferenceFromUrl("gs://iorder-72aca.appspot.com");
-        storeRef = storageRef.child(storeName + "/");
-        String imageRef = foodNameEditText.getText().toString().toLowerCase();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] imageData = baos.toByteArray();
 
-        storeRef = storeRef.child(imageRef);
-        UploadTask uploadTask = storeRef.putBytes(imageData);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                Toast.makeText(UploadFoodActivity.this, exception.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size,
-                // content-type, and download URL.
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                Food food = new Food(foodNameEditText.getText().toString(),
-                        Double.parseDouble(foodPriceEditText.getText().toString()),
-                        foodDescEditText.getText().toString(),
-                        downloadUrl.toString(),
-                        storeName);
-                mDatabase.child(String.valueOf(storeDBName)).push().setValue(food);
-                finish();
-            }
-        });
+        if(!isFieldEmpty(foodNameEditText)
+                && !isFieldEmpty(foodPriceEditText)
+                && !isFieldEmpty(foodDescEditText)
+                && imageBitmap != null) {
+
+            storageRef = storage.getReferenceFromUrl("gs://iorder-72aca.appspot.com");
+            storeRef = storageRef.child(storeName + "/");
+            String imageRef = foodNameEditText.getText().toString().toLowerCase();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] imageData = baos.toByteArray();
+
+            storeRef = storeRef.child(imageRef);
+            UploadTask uploadTask = storeRef.putBytes(imageData);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    Toast.makeText(UploadFoodActivity.this, exception.getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size,
+                    // content-type, and download URL.
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    Food food = new Food(foodNameEditText.getText().toString(),
+                            Double.parseDouble(foodPriceEditText.getText().toString()),
+                            foodDescEditText.getText().toString(),
+                            downloadUrl.toString(),
+                            storeName);
+                    mDatabase.child(String.valueOf(storeDBName)).push().setValue(food);
+                    finish();
+                }
+            });
+        }
+
+
+    }
+
+    private boolean isFieldEmpty(EditText editText) {
+        return TextUtils.isEmpty(editText.getText());
     }
 }

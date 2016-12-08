@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 
 import com.app.brensurio.iorder.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -134,7 +135,7 @@ public class AccountDetailActivity extends AppCompatActivity {
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loading();
+
                 updateAccount();
             }
         });
@@ -183,8 +184,11 @@ public class AccountDetailActivity extends AppCompatActivity {
             //
             if (doesPasswordMatch()
                     && !isFieldEmpty(emailEditText)
-                    && !isFieldEmpty(oldpwEditText)) {
+                    && !isFieldEmpty(oldpwEditText)
+                    && !isFieldEmpty(npEditText)
+                    && !isFieldEmpty(cnpEditText)) {
 
+                loading();
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 String newPassword = cnp;
                 final String TAG = "";
@@ -212,6 +216,12 @@ public class AccountDetailActivity extends AppCompatActivity {
                                     FirebaseAuth.getInstance().signOut();
                                     finish();
                                 }
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                unload();
                             }
                         });
             } else {

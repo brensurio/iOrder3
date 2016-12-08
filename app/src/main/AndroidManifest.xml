@@ -64,7 +64,9 @@
             android:exported="false" />
         <service
             android:name=".SellerService"
-            android:exported="false"></service>
+            android:exported="false" />
+
+        <activity android:name=".activities.TransactionHistoryActivity"></activity>
     </application>
 
 </manifest>

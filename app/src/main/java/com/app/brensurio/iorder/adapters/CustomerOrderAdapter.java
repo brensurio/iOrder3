@@ -1,5 +1,6 @@
 package com.app.brensurio.iorder.adapters;
 
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -16,7 +17,6 @@ import com.app.brensurio.iorder.activities.OrderDetailActivity;
 import com.app.brensurio.iorder.models.Order;
 
 import java.util.List;
-
 public class CustomerOrderAdapter extends
         RecyclerView.Adapter<CustomerOrderAdapter.ViewHolder> {
 
@@ -75,6 +75,7 @@ public class CustomerOrderAdapter extends
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, OrderDetailActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("order", orders.get(holder.getAdapterPosition()));
                 context.startActivity(intent);
             }
@@ -85,6 +86,4 @@ public class CustomerOrderAdapter extends
     public int getItemCount() {
         return orders.size();
     }
-
-
 }

@@ -21,6 +21,9 @@
             android:title="@string/history_orders"
             android:checkable="true"
             android:enabled="true" />
+        <item android:title="@string/print_history"
+            android:id="@+id/nav_print_history"
+            android:icon="@drawable/ic_print_black_24dp" />
     </group>
 
     <item android:title="Account">

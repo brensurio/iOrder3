@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_transaction_history"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.app.brensurio.iorder.activities.TransactionHistoryActivity">
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/print_button"
+        android:id="@+id/custom_recycler_view" />
+
+    <Button
+        android:text="@string/print_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/print_button"
+        android:layout_alignParentBottom="true"
+        style="@style/Widget.AppCompat.Button.Colored" />
+
+
+</RelativeLayout>

@@ -153,6 +153,11 @@ public class SellerMainActivity extends AppCompatActivity
         } else if (id == R.id.nav_history) {
             fragment = new SellerHistoryFragment();
             toolbar.setTitle("History");
+        } else if (id == R.id.nav_print_history) {
+            Intent intent = new Intent(this, TransactionHistoryActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("storeName", storeName);
+            startActivity(intent);
         } else if (id == R.id.nav_log_out) {
             FirebaseAuth.getInstance().signOut();
         } else if (id == R.id.nav_details) {

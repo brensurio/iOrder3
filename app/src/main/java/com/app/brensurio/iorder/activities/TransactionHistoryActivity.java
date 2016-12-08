@@ -5,35 +5,45 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Build;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.app.brensurio.iorder.R;
-import com.app.brensurio.iorder.fragments.OrderDetailFragment;
+import com.app.brensurio.iorder.adapters.CustomerOrderAdapter;
 import com.app.brensurio.iorder.models.Food;
 import com.app.brensurio.iorder.models.Order;
+import com.app.brensurio.iorder.ui.CustomRecyclerView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
-public class SellerOrderDetailActivity extends AppCompatActivity {
+public class TransactionHistoryActivity extends AppCompatActivity {
 
-    private static final String TAG = "";
     private String storeName;
-    private Order order;
-
+    private List<Order> transactionList;
     private DatabaseReference mDatabase;
 
     // Bluetooth variables
@@ -46,18 +56,15 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_seller_order_detail);
+        setContentView(R.layout.activity_transaction_history);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
-        getSupportActionBar().setTitle("Order details");
+        getSupportActionBar().setTitle("Today's Transaction");
+
+        storeName = getIntent().getStringExtra("storeName");
+        transactionList = new ArrayList<>();
 
         btAdapter = BluetoothAdapter.getDefaultAdapter();
-        Intent intent = getIntent();
-
-        storeName = intent.getStringExtra("STORE_NAME");
-        /*Toast.makeText(this, storeName, Toast.LENGTH_SHORT).show();
-        Log.d(TAG, storeName);*/
-
         if (storeName.equalsIgnoreCase("store1"))
             address = "20:15:04:15:15:60"; // Scoops
         else if (storeName.equalsIgnoreCase("store2"))
@@ -65,23 +72,45 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
         else if (storeName.equalsIgnoreCase("store3"))
             address = "20:15:04:16:10:93"; // ovenmade
 
-        /*Toast.makeText(this, address, Toast.LENGTH_SHORT).show();
-        Log.d(TAG, address);*/
-
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        Query query = mDatabase.child("storeorders").orderByChild("store")
+                .equalTo(storeName);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    Order order = singleSnapshot.getValue(Order.class);
+                    if (order.getStatus().equalsIgnoreCase("CONFIRMED")) {
+                        DateFormat df = new SimpleDateFormat("MMM dd, yyyy", Locale.ENGLISH);
+                        Date orderDate;
+                        Date todayDate;
+                        try {
+                            orderDate = df.parse(order.getDatetime());
+                            todayDate = df.parse(DateFormat.getDateTimeInstance().format(new Date()));
+                            if (orderDate.equals(todayDate))
+                                transactionList.add(order);
 
-        Bundle bundle = new Bundle();
-        order = getIntent().getParcelableExtra("order");
-        bundle.putParcelable("order", order);
-        Fragment fragment = new OrderDetailFragment();
-        fragment.setArguments(bundle);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.placeholder, fragment, "visible_fragment");
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.commit();
+                        } catch (ParseException e) {
+                            //Handle exception here, most of the time you will just log it.
+                            e.printStackTrace();
+                        }
+                    }
+                }
 
-        Button printButton = (Button) findViewById(R.id.print_button);
-        printButton.setOnClickListener(new View.OnClickListener() {
+                RecyclerView recyclerView = (RecyclerView) findViewById(R.id.custom_recycler_view);
+                CustomerOrderAdapter customerOrderAdapter =
+                        new CustomerOrderAdapter(getBaseContext(), transactionList);
+                LinearLayoutManager linearLayoutManager =
+                        new LinearLayoutManager(getBaseContext());
+                recyclerView.setLayoutManager(linearLayoutManager);
+                recyclerView.setAdapter(customerOrderAdapter);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
+        });
+
+        Button printbutton = (Button) findViewById(R.id.print_button);
+        printbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 print();
@@ -177,44 +206,35 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
 
     private void print() {
         // total | date | refno | location | subtotal1 | foodname1 | quantity1 | subtotalN | foodnameN | quantityN
-        String data;
+        for (Order order : transactionList) {
+            String data = "";
 
-        String[] name = order.getCustomerName().split("\\s+");
-        int last = name.length - 1;
-        String total = Double.toString(order.getAmount());
-        String date = order.getDatetime().substring(0, 17);
-        String refNo = order.getRefNo().substring(6, 12).toString();
-        String location = order.getLocation();
+            String[] name = order.getCustomerName().split("\\s+");
+            int last = name.length - 1;
+            String total = Double.toString(order.getAmount());
+            String date = order.getDatetime().substring(0, 17);
+            String refNo = order.getRefNo().substring(6, 12).toString();
+            String location = order.getLocation();
 
-        data = name[0] + "|" + name[last] + "|" + total + "|" + date + "|" + refNo + "|" + location + "|";
+            data = name[0] + "|" + name[last] + "|" + total + "|" + date + "|" + refNo + "|" + location + "|";
 
-        for (Food food : order.getItems()) {
-            String subtotal, price, foodname, quantity;
-            subtotal = Double.toString(food.getPrice() * food.getAmount());
-            price = Double.toString(food.getPrice());
-            foodname = food.getName();
-            quantity = Integer.toString(food.getAmount());
-            data += subtotal + "|" + price + "|" + quantity + "|" + foodname + "|";
-        }
+            for (Food food : order.getItems()) {
+                String subtotal, price, foodname, quantity;
+                subtotal = Double.toString(food.getPrice() * food.getAmount());
+                price = Double.toString(food.getPrice());
+                foodname = food.getName();
+                quantity = Integer.toString(food.getAmount());
+                data += subtotal + "|" + price + "|" + quantity + "|" + foodname + "|";
+            }
 
-        boolean success = false;
-        try {
-            outputStream.write(data.getBytes());
-            success = true;
-        } catch (IOException e) {
-            String msg = "In onResume() and an exception occurred during write: " + e.getMessage();
-            if (address.equals("00:00:00:00:00:00"))
-                msg = msg + ".\n\nUpdate your server address from 00:00:00:00:00:00 to the correct address on line 35 in the java code";
-            msg = msg +  ".\n\nCheck that the SPP UUID: " + MY_UUID.toString() + " exists on server.\n\n";
-            errorExit("Fatal Error", msg);
-        } finally {
-            if (success) {
-                DatabaseReference databaseReference =
-                        mDatabase.child("storeorders")
-                                .child(order.getRefNo());
-                Map<String, Object> statusUpdate = new HashMap<>();
-                statusUpdate.put("status", "CONFIRMED");
-                databaseReference.updateChildren(statusUpdate);
+            try {
+                outputStream.write(data.getBytes());
+            } catch (IOException e) {
+                String msg = "In onResume() and an exception occurred during write: " + e.getMessage();
+                if (address.equals("00:00:00:00:00:00"))
+                    msg = msg + ".\n\nUpdate your server address from 00:00:00:00:00:00 to the correct address on line 35 in the java code";
+                msg = msg +  ".\n\nCheck that the SPP UUID: " + MY_UUID.toString() + " exists on server.\n\n";
+                errorExit("Fatal Error", msg);
             }
         }
     }
