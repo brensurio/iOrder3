@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.app.brensurio.iorder.CustomerService;
 import com.app.brensurio.iorder.fragments.CartFragment;
 import com.app.brensurio.iorder.fragments.HistoryFragment;
 import com.app.brensurio.iorder.fragments.OrderFragment;
@@ -63,7 +64,6 @@ public class CustomerMainActivity extends AppCompatActivity
             orderList = new ArrayList<>();
         }
 
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Store menus");
         setSupportActionBar(toolbar);
@@ -99,6 +99,9 @@ public class CustomerMainActivity extends AppCompatActivity
         };
 
         customerName = getIntent().getStringExtra("NAME");
+        Intent intent = new Intent(getBaseContext(), CustomerService.class);
+        intent.putExtra("name", customerName);
+        startService(intent);
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar3);
         linearLayout = (LinearLayout) findViewById(R.id.linear_layout);

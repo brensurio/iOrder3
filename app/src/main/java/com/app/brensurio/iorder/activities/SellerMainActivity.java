@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.app.brensurio.iorder.R;
+import com.app.brensurio.iorder.SellerService;
 import com.app.brensurio.iorder.fragments.SellerFoodListFragment;
 import com.app.brensurio.iorder.fragments.SellerHistoryFragment;
 import com.app.brensurio.iorder.fragments.SellerOrderFragment;
@@ -40,21 +41,14 @@ public class SellerMainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seller_main);
 
-        mAuth = FirebaseAuth.getInstance();
-        storeName = getIntent().getStringExtra(STORE_NAME);
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(SellerMainActivity.this, UploadFoodActivity.class);
-                intent.putExtra(STORE_NAME, storeName);
-                startActivity(intent);
-            }
-        });
+        mAuth = FirebaseAuth.getInstance();
+        storeName = getIntent().getStringExtra(STORE_NAME);
+        Intent intent = new Intent(getBaseContext(), SellerService.class);
+        intent.putExtra("storeName", storeName);
+        startService(intent);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -125,10 +119,20 @@ public class SellerMainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_add_food) {
+            Intent intent = new Intent(SellerMainActivity.this, UploadFoodActivity.class);
+            intent.putExtra(STORE_NAME, storeName);
+            startActivity(intent);
+
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -151,6 +155,13 @@ public class SellerMainActivity extends AppCompatActivity
             toolbar.setTitle("History");
         } else if (id == R.id.nav_log_out) {
             FirebaseAuth.getInstance().signOut();
+        } else if (id == R.id.nav_details) {
+            Intent intent = new Intent(this, AccountDetailActivity.class);
+            startActivity(intent);
+
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+            return true;
         }
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

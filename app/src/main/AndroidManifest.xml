@@ -56,8 +56,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.CustomerMainActivity" />
         </activity>
-        <activity android:name=".activities.AccountDetailActivity"></activity>
-        <activity android:name=".activities.SellerOrderDetailActivity"></activity>
+        <activity android:name=".activities.AccountDetailActivity" />
+        <activity android:name=".activities.SellerOrderDetailActivity" />
+
+        <service
+            android:name=".CustomerService"
+            android:exported="false" />
+        <service
+            android:name=".SellerService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

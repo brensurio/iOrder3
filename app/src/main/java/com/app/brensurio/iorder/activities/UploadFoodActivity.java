@@ -51,6 +51,8 @@ public class UploadFoodActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_food);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+        getSupportActionBar().setTitle("Upload Food");
 
         Intent intent =  getIntent();
         storeName = intent.getStringExtra(STORE_NAME);
@@ -89,6 +91,12 @@ public class UploadFoodActivity extends AppCompatActivity {
         });
 
         foodImageView = (ImageView) findViewById(R.id.food_image_image_view);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return false;
     }
 
     @Override
@@ -153,6 +161,7 @@ public class UploadFoodActivity extends AppCompatActivity {
                         downloadUrl.toString(),
                         storeName);
                 mDatabase.child(String.valueOf(storeDBName)).push().setValue(food);
+                finish();
             }
         });
     }
