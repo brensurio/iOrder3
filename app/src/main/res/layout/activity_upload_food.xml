@@ -86,7 +86,7 @@
                 android:layout_weight="1" />
 
             <Button
-                android:text="Button"
+                android:text="Gallery"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/gallery_button"

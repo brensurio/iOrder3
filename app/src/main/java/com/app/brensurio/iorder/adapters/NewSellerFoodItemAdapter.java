@@ -1,5 +1,8 @@
 package com.app.brensurio.iorder.adapters;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,9 +27,10 @@ public class NewSellerFoodItemAdapter extends
 
     private List<Food> foodList;
     private Listener listener;
+    private Context context;
 
     public interface Listener {
-        void onUpdate(int position);
+        void onDelete(int position);
         void onAvailable(int position);
         void onUnAvailable(int position);
     }
@@ -42,8 +46,9 @@ public class NewSellerFoodItemAdapter extends
         }
     }
 
-    public NewSellerFoodItemAdapter(List<Food> foodList) {
+    public NewSellerFoodItemAdapter(List<Food> foodList, Context context) {
         this.foodList = foodList;
+        this.context = context;
     }
 
     @Override
@@ -70,11 +75,33 @@ public class NewSellerFoodItemAdapter extends
         Picasso.with(foodImageView.getContext()).load(foodList.get(position).getImageLink())
                 .into(foodImageView);
 
-        Button updateButton = (Button) cardView.findViewById(R.id.update_button);
-        updateButton.setOnClickListener(new View.OnClickListener() {
+        Button deletebutton = (Button) cardView.findViewById(R.id.button5);
+        deletebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onUpdate(holder.getAdapterPosition());
+                if (listener != null) {
+                    AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+                    alertDialog.setMessage(context.getString(R.string.delete_message));
+                    alertDialog.setButton(DialogInterface.BUTTON_POSITIVE,
+                            context.getResources().getString(R.string.positive),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    listener.onDelete(holder.getAdapterPosition());
+                                    notifyItemRemoved(holder.getAdapterPosition());
+                                    notifyItemRangeChanged(holder.getAdapterPosition(), getItemCount());
+                                }
+                            });
+                    alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE,
+                            context.getString(R.string.negative),
+                            new DialogInterface.OnClickListener(){
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.cancel();
+                                }
+                            });
+                    alertDialog.show();
+                }
             }
         });
 
@@ -85,7 +112,6 @@ public class NewSellerFoodItemAdapter extends
         } else {
             isAvailSwitch.setChecked(true);
         }
-
         isAvailSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {

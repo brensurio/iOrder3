@@ -44,7 +44,7 @@
     <!--Order Fragment-->
     <string name="total_amount">Total Amount:</string>
     <string name="proceed_to_checkout">Proceed to checkout</string>
-    <string name="place_to_deliver">Place to deliver</string>
+    <string name="place_to_deliver">Notes:</string>
 
     <!--Seller drawer menu-->
     <string name="food_gallery">Food Gallery</string>
@@ -52,8 +52,8 @@
 
     <!--Checkout-->
     <string name="place_order">Place Order</string>
-    <string name="place">Place to deliver </string>
-    <string name="cash_payment">Cash Amount</string>
+    <string name="place">Place, cash, notes, etc.</string>
+    <string name="cash_payment">Notes: </string>
     <string name="items">Item(s)</string>
 
     <!--Delete item from cart dialog-->
@@ -74,7 +74,7 @@
     <!--Order Detail-->
     <string name="order_date">Order Date</string>
     <string name="order_id">Order ID</string>
-    <string name="delivery_place">Delivery Place</string>
+    <string name="delivery_place">Notes</string>
     <string name="total_price">Total Price</string>
     <string name="store">Store</string>
     <string name="string">Status</string>
@@ -86,5 +86,6 @@
     <string name="update">Update</string>
     <string name="available">Availability</string>
     <string name="unavailable">Unavailable</string>
+    <string name="delete">Delete</string>
 
 </resources>

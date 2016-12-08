@@ -50,16 +50,6 @@ public class SellerMainActivity extends AppCompatActivity
         intent.putExtra("storeName", storeName);
         startService(intent);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(SellerMainActivity.this, UploadFoodActivity.class);
-                intent.putExtra(STORE_NAME, storeName);
-                startActivity(intent);
-            }
-        });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open,
@@ -129,10 +119,20 @@ public class SellerMainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_add_food) {
+            Intent intent = new Intent(SellerMainActivity.this, UploadFoodActivity.class);
+            intent.putExtra(STORE_NAME, storeName);
+            startActivity(intent);
+
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -155,6 +155,13 @@ public class SellerMainActivity extends AppCompatActivity
             toolbar.setTitle("History");
         } else if (id == R.id.nav_log_out) {
             FirebaseAuth.getInstance().signOut();
+        } else if (id == R.id.nav_details) {
+            Intent intent = new Intent(this, AccountDetailActivity.class);
+            startActivity(intent);
+
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+            return true;
         }
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
