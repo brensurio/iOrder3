@@ -84,7 +84,8 @@ public class SpecificStoreFragment extends Fragment {
                 foodList.clear();
                 for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
                     Food food = singleSnapshot.getValue(Food.class);
-                    foodList.add(food);
+                    if (checkLastLetter(food.getStore()))
+                        foodList.add(food);
                 }
 
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -104,7 +105,6 @@ public class SpecificStoreFragment extends Fragment {
                         Food food = foodList.get(position);
                         storeFragmentCallback.loading();
                         if (storeFragmentCallback.getOrderList().contains(food)) {
-
                             Toast.makeText(getActivity(), "Item is in cart already",
                                     Toast.LENGTH_SHORT).show();
                         } else {
@@ -123,4 +123,14 @@ public class SpecificStoreFragment extends Fragment {
 
         return foodRecycler;
     }
+
+    private Boolean checkLastLetter(String str) {
+        boolean state = true;
+
+        if (str.charAt(str.length() - 1) == 'u')
+            state = false;
+
+        return state;
+    }
+
 }

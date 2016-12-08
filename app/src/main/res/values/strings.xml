@@ -84,5 +84,7 @@
 
     <!--Card new seller food item-->
     <string name="update">Update</string>
+    <string name="available">Availability</string>
+    <string name="unavailable">Unavailable</string>
 
 </resources>

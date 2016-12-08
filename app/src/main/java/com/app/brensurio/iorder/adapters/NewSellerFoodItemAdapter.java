@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Switch;
@@ -26,6 +28,7 @@ public class NewSellerFoodItemAdapter extends
     public interface Listener {
         void onUpdate(int position);
         void onAvailable(int position);
+        void onUnAvailable(int position);
     }
 
     // Provide reference to the views used in the recycler view
@@ -75,7 +78,24 @@ public class NewSellerFoodItemAdapter extends
             }
         });
 
-        //Switch isAvailSwitch = (Switch) cardView.findViewById()
+        CheckBox isAvailSwitch = (CheckBox) cardView.findViewById(R.id.checkBox);
+        String storeName = foodList.get(position).getStore();
+        if (storeName.charAt((storeName.length() - 1)) == 'u') {
+            isAvailSwitch.setChecked(false);
+        } else {
+            isAvailSwitch.setChecked(true);
+        }
+
+        isAvailSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked) {
+                    listener.onAvailable(holder.getAdapterPosition());
+                } else {
+                    listener.onUnAvailable(holder.getAdapterPosition());
+                }
+            }
+        });
 
     }
 

@@ -59,22 +59,54 @@ public class SellerFoodListFragment extends Fragment {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                foodList.clear();
                 for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
                     Food food = singleSnapshot.getValue(Food.class);
                     foodList.add(food);
                 }
-                NewSellerFoodItemAdapter foodListAdapter = new NewSellerFoodItemAdapter(foodList);
+                final NewSellerFoodItemAdapter foodListAdapter = new NewSellerFoodItemAdapter(foodList);
                 LinearLayoutManager linearLayoutManager =
                         new LinearLayoutManager(getActivity());
-
                 foodListAdapter.setListener(new NewSellerFoodItemAdapter.Listener() {
                     @Override
                     public void onUpdate(int position) {
- 
+                        // TODO: Update food details
                     }
-                    @Override
-                    public void onAvailable(int position) {
 
+                    @Override
+                    public void onAvailable(final int position) {
+                        Query query1 = mDatabase.child(sellerFragmentCallback.getStoreName().concat("foodlist"));
+                        query1.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                                    Food foodItem = singleSnapshot.getValue(Food.class);
+                                    if (foodItem.getName().equalsIgnoreCase(foodList.get(position).getName())) {
+                                        singleSnapshot.getRef().child("store").setValue(cutLastLetter(foodItem.getStore()));
+                                    }
+                                }
+                            }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) { }
+                        });
+                    }
+
+                    @Override
+                    public void onUnAvailable(final int position) {
+                        Query query1 = mDatabase.child(sellerFragmentCallback.getStoreName().concat("foodlist"));
+                        query1.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                                    Food foodItem = singleSnapshot.getValue(Food.class);
+                                    if (foodItem.getName().equalsIgnoreCase(foodList.get(position).getName())) {
+                                        singleSnapshot.getRef().child("store").setValue(foodItem.getStore() + "u");
+                                    }
+                                }
+                            }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) { }
+                        });
                     }
                 });
                 foodRecycler.setLayoutManager(linearLayoutManager);
@@ -85,5 +117,12 @@ public class SellerFoodListFragment extends Fragment {
         });
 
         return foodRecycler;
+    }
+
+    private String cutLastLetter(String str) {
+        if (str != null && str.length() > 0 && str.charAt(str.length()-1)=='u') {
+            str = str.substring(0, str.length() - 1);
+        }
+        return str;
     }
 }
